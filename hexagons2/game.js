@@ -22,7 +22,7 @@ var Play = function(game) {
 
 Play.prototype = {
 	preload: function() {
-		game.load.image("hexagon", "img/hexagon.png");
+		game.load.image("hexagon", "img/hexagon-filled.png");
 		game.load.image("marker", "img/marker.png");
 		game.load.image("button", "img/button_generate.png");
 	},
