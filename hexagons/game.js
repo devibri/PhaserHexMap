@@ -30,9 +30,12 @@ window.onload = function() {
 				if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
 					var hexagonX = hexagonWidth*i*1.5+(hexagonWidth/4*3)*(j%2);
 					var hexagonY = hexagonHeight*j/2;
-					let hexagon = new Hexagon(game, 'hexagon', hexagonX, hexagonY);
-					game.add.existing(hexagon);
-					//var hexagon = game.add.sprite(hexagonX,hexagonY,"hexagon");
+					// let hexagon = new SnowStorm(this.game, 'hexagon');
+					// game.add.existing(hexagon);
+					for(let i=0; i<100; i++) {
+			    	let hexagon = new SnowStorm(game, 'hexagon');
+			    	game.add.existing(hexagon);
+			    }
 					hexagonGroup.add(hexagon);
 					hexagonArray[i][j]=hexagon;
 					var hexagonText = game.add.text(hexagonX+hexagonWidth/4+5,hexagonY+5,i+","+j);
