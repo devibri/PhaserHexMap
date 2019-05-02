@@ -1,7 +1,7 @@
 // debug ENFORCEMENT
 'use strict';
 
-var game = new Phaser.Game(600, 800, Phaser.AUTO);
+var game = new Phaser.Game(1140, 800, Phaser.AUTO);
 
 var hexagonWidth = 70;
 var hexagonHeight = 80;
@@ -22,8 +22,9 @@ var Play = function(game) {
 
 Play.prototype = {
 	preload: function() {
-		game.load.image("hexagon", "hexagon.png");
-		game.load.image("marker", "marker.png");
+		game.load.image("hexagon", "img/hexagon.png");
+		game.load.image("marker", "img/marker.png");
+		game.load.image("button", "img/button_generate.png");
 	},
 	create: function() {
 		hexagonGroup = game.add.group();
@@ -59,15 +60,6 @@ Play.prototype = {
 		marker.visible=false;
 		hexagonGroup.add(marker);
 		moveIndex = game.input.addMoveCallback(this.checkHex, this);
-
-	    // create snow flurries
-	    // for(let i=0; i<100; i++) {
-	    // 	let flake = new Hexagon(game, 'hexagon');
-	    // 	game.add.existing(flake);
-	    // }
-
-	    //  enable cursor controls
-	    //cursors = game.input.keyboard.createCursorKeys();
 	},
 
 	update: function() {
