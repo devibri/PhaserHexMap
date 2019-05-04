@@ -15,6 +15,8 @@ var gradient = (hexagonHeight/4)/(hexagonWidth/2);
 var marker;
 var hexagonGroup;
 var hexagonArray = [];
+var hexX;
+var hexY;
 
 var Play = function(game) {
 
@@ -22,7 +24,9 @@ var Play = function(game) {
 
 Play.prototype = {
 	preload: function() {
-		game.load.image("hexagon", "img/hexagon-filled.png");
+		game.load.image("hexagon", "img/hexagon.png");
+		game.load.image("hexagon_selected", "img/hexagon-selected.png");
+		game.load.image("hexagon_filled", "img/hexagon-filled.png");
 		game.load.image("marker", "img/marker.png");
 		game.load.image("button", "img/button_generate.png");
 	},
@@ -59,14 +63,26 @@ Play.prototype = {
 		marker.anchor.setTo(0.5);
 		marker.visible=false;
 		hexagonGroup.add(marker);
-		moveIndex = game.input.addMoveCallback(this.checkHex, this);
+		moveIndex = game.input.addMoveCallback(this.setHexTint, this);
+		game.input.onDown.add(this.setHexColor, this);
 	},
 
 	update: function() {
 
 	},
 
+	setHexTint() {
+		this.checkHex();
+		this.tintHex(hexX, hexY);
+	},
+
+	setHexColor() {
+		this.checkHex();
+		this.colorHex(hexX, hexY);
+	},
+
 	checkHex() {
+
 		var candidateX = Math.floor((game.input.worldX-hexagonGroup.x)/sectorWidth);
 		var candidateY = Math.floor((game.input.worldY-hexagonGroup.y)/sectorHeight);
 		var deltaX = (game.input.worldX-hexagonGroup.x)%sectorWidth;
@@ -95,9 +111,10 @@ Play.prototype = {
 				}
 			}
 		}
-		this.placeMarker(candidateX,candidateY);
+		hexX = candidateX;
+		hexY = candidateY;
 	},
-	placeMarker(posX,posY){
+	tintHex(posX,posY){
 		for(var i = 0; i < gridSizeY/2; i ++){
 			for(var j = 0; j < gridSizeX; j ++){
 				if(gridSizeY%2==0 || i+1<gridSizeY/2 || j%2==0){
@@ -106,51 +123,29 @@ Play.prototype = {
 			}
 		}
 		if(posX<0 || posY<0 || posY>=gridSizeY || posX>columns[posY%2]-1){
-			marker.visible=false;
+			// do nothing
 		}
 		else{
-			marker.visible=true;
-			marker.x = hexagonWidth*posX;
-			marker.y = hexagonHeight/4*3*posY+hexagonHeight/2;
-			if(posY%2==0){
-				marker.x += hexagonWidth/2;
-			}
-			else{
-				marker.x += hexagonWidth;
-			}
 			var markerX = posX*2+posY%2;
 			var markerY = Math.floor(posY/2);
 			hexagonArray[markerY][markerX].tint = 0xff8800;
-			// left
-			if(markerX-2>=0){
-				hexagonArray[markerY][markerX-2].tint = 0xff0000;
-			}
-			// right
-			if(markerX+2<gridSizeX){
-				hexagonArray[markerY][markerX+2].tint = 0xff0000;
-			}
-			// up
-			if(markerY-1+markerX%2>=0){
-				// left
-				if(markerX-1>=0){
-					hexagonArray[markerY-1+markerX%2][markerX-1].tint = 0xff0000;
-				}
-				// right
-				if(markerX+1<gridSizeX){
-					hexagonArray[markerY-1+markerX%2][markerX+1].tint = 0xff0000;
+		}
+	},
+	colorHex(posX,posY){
+		for(var i = 0; i < gridSizeY/2; i ++){
+			for(var j = 0; j < gridSizeX; j ++){
+				if(gridSizeY%2==0 || i+1<gridSizeY/2 || j%2==0){
+					hexagonArray[i][j].tint = 0xffffff;
 				}
 			}
-			// down
-			if(markerY+markerX%2<gridSizeY/2 && (gridSizeY%2==0 || markerY<Math.floor(gridSizeY/2))){
-				// left
-				if(markerX-1>=0){
-					hexagonArray[markerY+markerX%2][markerX-1].tint = 0xff0000;
-				}
-				// right
-				if(markerX+1<gridSizeX){
-					hexagonArray[markerY+markerX%2][markerX+1].tint = 0xff0000;
-				}
-			}
+		}
+		if(posX<0 || posY<0 || posY>=gridSizeY || posX>columns[posY%2]-1){
+			// do nothing
+		}
+		else{
+			var markerX = posX*2+posY%2;
+			var markerY = Math.floor(posY/2);
+			hexagonArray[markerY][markerX].loadTexture('hexagon_selected', 0);
 		}
 	}
 };
