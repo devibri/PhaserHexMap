@@ -19,6 +19,8 @@ var hexX;
 var hexY;
 var tileText;
 var button;
+var genX;
+var genY;
 
 var Play = function(game) {
 
@@ -33,7 +35,11 @@ Play.prototype = {
 		game.load.image("button", "img/button_generate.png");
 	},
 	create: function() {
-		tileText = game.add.text(40, 100, "Terrain: [unknown]\nQuests: [unknown]\nLocations: [unknown]");
+		genX = 0;
+		genY = 0;
+		button = game.add.button(40, 400, 'button', this.actionOnGenerate, this);
+		button.visible = false;
+		tileText = game.add.text(40, 100, "[Tile info]");
 		tileText.font = "arial";
 		tileText.fontSize = 24;
 
@@ -90,7 +96,7 @@ Play.prototype = {
 		this.displayHexText(hexX, hexY);
 	},
 
-	// determines which hex user is interacting with
+	// determines which hex user is interacting with (returns x/y position)
 	checkHex() {
 		var candidateX = Math.floor((game.input.worldX-hexagonGroup.x)/sectorWidth);
 		var candidateY = Math.floor((game.input.worldY-hexagonGroup.y)/sectorHeight);
@@ -162,33 +168,45 @@ Play.prototype = {
 	},
 
 	// Show the text of the currently selected hex
-	displayHexText() {
-		// TODO: Clear the current text
+	displayHexText(posX, posY) {
+		// Clear the current text
 		tileText.text = "";
+		button.destroy();
+
+		// Get current selected hex
+		var markerX = posX*2+posY%2;
+		var markerY = Math.floor(posY/2);
+
+		let selectedHex = hexagonArray[markerY][markerX];
 
 		// Place current selected tile's text
-		if (this.generated) {
-			tileText.text = "Terrain: " + this.terrain + "\nQuests: " + this.quests + "\nLocations: " + this.locations;
+		if (selectedHex.isGenerated) {
+			tileText.text = "Terrain: " + selectedHex.terrain + "\nQuests: " + selectedHex.quests + "\nLocations: " + selectedHex.locations;
 		} else {
-
-			// button = game.add.button(40, 400, 'button', this.actionOnGenerate, this);
+			tileText.text = "Terrain: [unknown]\nQuests: [unknown]\nLocations: [unknown]";
+			console.log("displaying button...");
+			button = game.add.button(40, 400, 'button', this.actionOnGenerate, this);
 		}
 	},
 
 	// on clicking the generate button
 	actionOnGenerate() {
-		this.generated = true;
+		console.log("generating...");
+		var markerX = genX*2+genY%2;
+		var markerY = Math.floor(genY/2);
+		let selectedHex = hexagonArray[markerY][markerX];
+		selectedHex.isGenerated = true;
 
 		// change the hex color to generated color
-		this.loadTexture('hexagon_generated', 0);
+		selectedHex.loadTexture('hexagon_generated', 0);
 
 		// generate and set the field values
-		this.terrain = "forest";
-		this.quests = "no quests here";
-		this.locations = "a cave, a stream";
+		selectedHex.terrain = "forest";
+		selectedHex.quests = "no quests here";
+		selectedHex.locations = "a cave, a stream";
 
 		// update the text on the screen
-		this.tileText.text = "Terrain: " + this.terrain + "\nQuests: " + this.quests + "\nLocations: " + this.locations;
+		tileText.text = "Terrain: " + selectedHex.terrain + "\nQuests: " + selectedHex.quests + "\nLocations: " + selectedHex.locations;
 	}
 };
 
