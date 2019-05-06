@@ -14,11 +14,8 @@ var hexagonGroup;
 var hexagonArray = [];
 var hex;
 
-
 var Play = function(game) {
-
 };
-
 
 Play.prototype = {
 	preload: function() {
@@ -226,42 +223,10 @@ function colorHex(posX,posY){
 			tileText.text = "Terrain: [unknown]\nQuests: [unknown]\nLocations: [unknown]";
 			button = game.add.button(40, 400, 'button', actionOnGenerate, this);
 		}
-		//hexagonArray[markerX][markerY].tint = 0xff8800;
-		// up
-		if(markerY-2>=0){
-			//hexagonArray[markerX][markerY-2].tint = 0xff0000;
-		}
-		// down
-		if(markerY+2<gridSizeY){
-			//hexagonArray[markerX][markerY+2].tint = 0xff0000;
-		}
-		// right
-		if(markerX+markerY%2<gridSizeX/2 && (gridSizeX%2==0 || markerX<Math.floor(gridSizeX/2))){
-			//up
-			if(markerY-1>=0){
-				//hexagonArray[markerX+markerY%2][markerY-1].tint = 0xff0000;
-			}
-			// down
-			if(markerY+1<gridSizeY){
-				//hexagonArray[markerX+markerY%2][markerY+1].tint = 0xff0000;
-			}
-		}
-		// left
-		if(markerX-1+markerY%2>=0){
-			// up
-			if(markerY-1>=0){
-				//hexagonArray[markerX-1+markerY%2][markerY-1].tint = 0xff0000;
-			}
-			// down
-			if(markerY+1<gridSizeY){
-				//hexagonArray[markerX-1+markerY%2][markerY+1].tint = 0xff0000;
-			}
-		}
 	}
 }
 
 function actionOnGenerate() {
-		console.log("generating...");
 		hex.isGenerated = true;
 
 		// change the hex color to generated color
@@ -275,10 +240,6 @@ function actionOnGenerate() {
 		// update the text on the screen
 		tileText.text = "Terrain: " + hex.terrain + "\nQuests: " + hex.quests + "\nLocations: " + hex.locations;
 	}
-
-
-
-
 
 // define and start states
 game.state.add('Play', Play);
