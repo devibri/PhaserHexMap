@@ -1,41 +1,48 @@
-window.onload = function() {
 
-	var game = new Phaser.Game(1140, 480, Phaser.CANVAS, "", {preload: onPreload, create: onCreate});
+var game = new Phaser.Game(1140, 800, Phaser.AUTO);
+var hexagonWidth = 80;
+var hexagonHeight = 70;
+var gridSizeX = 10;
+var gridSizeY = 12;
+var columns = [Math.ceil(gridSizeY/2),Math.floor(gridSizeY/2)];
+var moveIndex;
+var sectorWidth = hexagonWidth/4*3;
+var sectorHeight = hexagonHeight;
+var gradient = (hexagonWidth/4)/(hexagonHeight/2);
+var marker;
+var hexagonGroup;
+var hexagonArray = [];
+var hex;
 
-	var hexagonWidth = 80;
-	var hexagonHeight = 70;
-	var gridSizeX = 10;
-	var gridSizeY = 12;
-	var columns = [Math.ceil(gridSizeY/2),Math.floor(gridSizeY/2)];
-	var moveIndex;
-	var sectorWidth = hexagonWidth/4*3;
-	var sectorHeight = hexagonHeight;
-	var gradient = (hexagonWidth/4)/(hexagonHeight/2);
-	var marker;
-	var hexagonGroup;
-	var hexagonArray = [];
 
-	function onPreload() {
+var Play = function(game) {
+
+};
+
+
+Play.prototype = {
+	preload: function() {
 		game.load.image("hexagon", "hexagon.png");
+		game.load.image("hexagon_selected", "hexagon-selected.png");
+		game.load.image("hexagon_generated", "hexagon-filled.png");
 		game.load.image("marker", "marker.png");
-	}
+		game.load.image("button", "button_generate.png");
+	},
+	create: function() {
+		tileText = game.add.text(40, 100, "[Tile info]");
+		tileText.font = "arial";
+		tileText.fontSize = 24;
 
-	function onCreate() {
 		hexagonGroup = game.add.group();
 		game.stage.backgroundColor = "#ffffff"
 		for(var i = 0; i < gridSizeX/2; i ++){
 			hexagonArray[i] = [];
 			for(var j = 0; j < gridSizeY; j ++){
-
 				if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
 					var hexagonX = hexagonWidth*i*1.5+(hexagonWidth/4*3)*(j%2);
 					var hexagonY = hexagonHeight*j/2;
-					// let hexagon = new SnowStorm(this.game, 'hexagon');
-					// game.add.existing(hexagon);
-					for(let i=0; i<100; i++) {
-			    	let hexagon = new SnowStorm(game, 'hexagon');
-			    	game.add.existing(hexagon);
-			    }
+					var hexagon = new Hexagon(this.game, 'hexagon', hexagonX, hexagonY);
+					//var hexagon = game.add.sprite(hexagonX,hexagonY,"hexagon");
 					hexagonGroup.add(hexagon);
 					hexagonArray[i][j]=hexagon;
 					var hexagonText = game.add.text(hexagonX+hexagonWidth/4+5,hexagonY+5,i+","+j);
@@ -58,98 +65,221 @@ window.onload = function() {
 		marker.visible=false;
 		hexagonGroup.add(marker);
 		moveIndex = game.input.addMoveCallback(checkHex, this);
-		//add UI text
-		var hexagonInfoText = game.add.text(20,20,"Tile info:")
-		hexagonInfoText.font = "arial";
-		hexagonInfoText.fontSize = 18;
+		game.input.onDown.add(checkClickedHex, this);
 	}
+};
 
-	function checkHex(){
-		var candidateX = Math.floor((game.input.worldX-hexagonGroup.x)/sectorWidth);
-		var candidateY = Math.floor((game.input.worldY-hexagonGroup.y)/sectorHeight);
-		var deltaX = (game.input.worldX-hexagonGroup.x)%sectorWidth;
-		var deltaY = (game.input.worldY-hexagonGroup.y)%sectorHeight;
-		if(candidateX%2==0){
-			if(deltaX<((hexagonWidth/4)-deltaY*gradient)){
+
+function checkHex(){
+	var candidateX = Math.floor((game.input.worldX-hexagonGroup.x)/sectorWidth);
+	var candidateY = Math.floor((game.input.worldY-hexagonGroup.y)/sectorHeight);
+	var deltaX = (game.input.worldX-hexagonGroup.x)%sectorWidth;
+	var deltaY = (game.input.worldY-hexagonGroup.y)%sectorHeight;
+	if(candidateX%2==0){
+		if(deltaX<((hexagonWidth/4)-deltaY*gradient)){
+			candidateX--;
+			candidateY--;
+		}
+		if(deltaX<((-hexagonWidth/4)+deltaY*gradient)){
+			candidateX--;
+		}
+	}
+	else{
+		if(deltaY>=hexagonHeight/2){
+			if(deltaX<(hexagonWidth/2-deltaY*gradient)){
 				candidateX--;
+			}
+		}
+		else{
+			if(deltaX<deltaY*gradient){
+				candidateX--;
+			}
+			else{
 				candidateY--;
 			}
-			if(deltaX<((-hexagonWidth/4)+deltaY*gradient)){
+		}
+	}
+	placeMarker(candidateX,candidateY);
+}
+
+
+function checkClickedHex(){
+	var candidateX = Math.floor((game.input.worldX-hexagonGroup.x)/sectorWidth);
+	var candidateY = Math.floor((game.input.worldY-hexagonGroup.y)/sectorHeight);
+	var deltaX = (game.input.worldX-hexagonGroup.x)%sectorWidth;
+	var deltaY = (game.input.worldY-hexagonGroup.y)%sectorHeight;
+	if(candidateX%2==0){
+		if(deltaX<((hexagonWidth/4)-deltaY*gradient)){
+			candidateX--;
+			candidateY--;
+		}
+		if(deltaX<((-hexagonWidth/4)+deltaY*gradient)){
+			candidateX--;
+		}
+	}
+	else{
+		if(deltaY>=hexagonHeight/2){
+			if(deltaX<(hexagonWidth/2-deltaY*gradient)){
 				candidateX--;
 			}
 		}
 		else{
-			if(deltaY>=hexagonHeight/2){
-				if(deltaX<(hexagonWidth/2-deltaY*gradient)){
-					candidateX--;
-				}
+			if(deltaX<deltaY*gradient){
+				candidateX--;
 			}
 			else{
-				if(deltaX<deltaY*gradient){
-					candidateX--;
-				}
-				else{
-					candidateY--;
-				}
+				candidateY--;
 			}
 		}
-		placeMarker(candidateX,candidateY);
 	}
+	colorHex(candidateX,candidateY);
+}
 
-	function placeMarker(posX,posY){
-		for(var i = 0; i < gridSizeX/2; i ++){
-			for(var j = 0; j < gridSizeY; j ++){
-				if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
-					hexagonArray[i][j].tint = 0xffffff;
-				}
+function placeMarker(posX,posY){
+	for(var i = 0; i < gridSizeX/2; i ++){
+		for(var j = 0; j < gridSizeY; j ++){
+			if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
+				hexagonArray[i][j].tint = 0xffffff;
 			}
 		}
-		if(posX<0 || posY<0 || posX>=gridSizeX || posY>columns[posX%2]-1){
-			marker.visible=false;
+	}
+	if(posX<0 || posY<0 || posX>=gridSizeX || posY>columns[posX%2]-1){
+		marker.visible=false;
+	}
+	else{
+		marker.x = hexagonWidth/4*3*posX+hexagonWidth/2;
+		marker.y = hexagonHeight*posY;
+		if(posX%2==0){
+			marker.y += hexagonHeight/2;
 		}
 		else{
-			marker.visible=true;
-			marker.x = hexagonWidth/4*3*posX+hexagonWidth/2;
-			marker.y = hexagonHeight*posY;
-			if(posX%2==0){
-				marker.y += hexagonHeight/2;
-			}
-			else{
-				marker.y += hexagonHeight;
-			}
-			var markerX = Math.floor(posX/2);
-			var markerY = posY*2+posX%2;
-			hexagonArray[markerX][markerY].tint = 0xff8800;
-			// up
-			if(markerY-2>=0){
-				hexagonArray[markerX][markerY-2].tint = 0xff0000;
+			marker.y += hexagonHeight;
+		}
+		var markerX = Math.floor(posX/2);
+		var markerY = posY*2+posX%2;
+		hexagonArray[markerX][markerY].tint = 0xff8800;
+		// up
+		if(markerY-2>=0){
+			//hexagonArray[markerX][markerY-2].tint = 0xff0000;
+		}
+		// down
+		if(markerY+2<gridSizeY){
+			//hexagonArray[markerX][markerY+2].tint = 0xff0000;
+		}
+		// right
+		if(markerX+markerY%2<gridSizeX/2 && (gridSizeX%2==0 || markerX<Math.floor(gridSizeX/2))){
+			//up
+			if(markerY-1>=0){
+				//hexagonArray[markerX+markerY%2][markerY-1].tint = 0xff0000;
 			}
 			// down
-			if(markerY+2<gridSizeY){
-				hexagonArray[markerX][markerY+2].tint = 0xff0000;
+			if(markerY+1<gridSizeY){
+				//hexagonArray[markerX+markerY%2][markerY+1].tint = 0xff0000;
 			}
-			// right
-			if(markerX+markerY%2<gridSizeX/2 && (gridSizeX%2==0 || markerX<Math.floor(gridSizeX/2))){
-				//up
-				if(markerY-1>=0){
-					hexagonArray[markerX+markerY%2][markerY-1].tint = 0xff0000;
-				}
-				// down
-				if(markerY+1<gridSizeY){
-					hexagonArray[markerX+markerY%2][markerY+1].tint = 0xff0000;
-				}
+		}
+		// left
+		if(markerX-1+markerY%2>=0){
+			// up
+			if(markerY-1>=0){
+				//hexagonArray[markerX-1+markerY%2][markerY-1].tint = 0xff0000;
 			}
-			// left
-			if(markerX-1+markerY%2>=0){
-				// up
-				if(markerY-1>=0){
-					hexagonArray[markerX-1+markerY%2][markerY-1].tint = 0xff0000;
-				}
-				// down
-				if(markerY+1<gridSizeY){
-					hexagonArray[markerX-1+markerY%2][markerY+1].tint = 0xff0000;
-				}
+			// down
+			if(markerY+1<gridSizeY){
+				//hexagonArray[markerX-1+markerY%2][markerY+1].tint = 0xff0000;
 			}
 		}
 	}
 }
+
+function colorHex(posX,posY){
+	for(var i = 0; i < gridSizeX/2; i ++){
+		for(var j = 0; j < gridSizeY; j ++){
+			if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
+				if (hexagonArray[i][j].isGenerated) {
+						hexagonArray[i][j].loadTexture('hexagon_generated', 0);
+					} else {
+					hexagonArray[i][j].loadTexture('hexagon', 0);
+				}
+			}
+		}
+	}
+	if(posX<0 || posY<0 || posX>=gridSizeX || posY>columns[posX%2]-1){
+		marker.visible=false;
+	}
+	else{
+		marker.x = hexagonWidth/4*3*posX+hexagonWidth/2;
+		marker.y = hexagonHeight*posY;
+		if(posX%2==0){
+			marker.y += hexagonHeight/2;
+		}
+		else{
+			marker.y += hexagonHeight;
+		}
+		var markerX = Math.floor(posX/2);
+		var markerY = posY*2+posX%2;
+		var selectedHex = hexagonArray[markerX][markerY];
+		selectedHex.loadTexture('hexagon_selected', 0);
+		hex = selectedHex;
+		if (selectedHex.isGenerated) {
+			tileText.text = "Terrain: " + selectedHex.terrain + "\nQuests: " + selectedHex.quests + "\nLocations: " + selectedHex.locations;
+		} else {
+			tileText.text = "Terrain: [unknown]\nQuests: [unknown]\nLocations: [unknown]";
+			button = game.add.button(40, 400, 'button', actionOnGenerate, this);
+		}
+		//hexagonArray[markerX][markerY].tint = 0xff8800;
+		// up
+		if(markerY-2>=0){
+			//hexagonArray[markerX][markerY-2].tint = 0xff0000;
+		}
+		// down
+		if(markerY+2<gridSizeY){
+			//hexagonArray[markerX][markerY+2].tint = 0xff0000;
+		}
+		// right
+		if(markerX+markerY%2<gridSizeX/2 && (gridSizeX%2==0 || markerX<Math.floor(gridSizeX/2))){
+			//up
+			if(markerY-1>=0){
+				//hexagonArray[markerX+markerY%2][markerY-1].tint = 0xff0000;
+			}
+			// down
+			if(markerY+1<gridSizeY){
+				//hexagonArray[markerX+markerY%2][markerY+1].tint = 0xff0000;
+			}
+		}
+		// left
+		if(markerX-1+markerY%2>=0){
+			// up
+			if(markerY-1>=0){
+				//hexagonArray[markerX-1+markerY%2][markerY-1].tint = 0xff0000;
+			}
+			// down
+			if(markerY+1<gridSizeY){
+				//hexagonArray[markerX-1+markerY%2][markerY+1].tint = 0xff0000;
+			}
+		}
+	}
+}
+
+function actionOnGenerate() {
+		console.log("generating...");
+		hex.isGenerated = true;
+
+		// change the hex color to generated color
+		hex.loadTexture('hexagon_generated', 0);
+
+		// generate and set the field values
+		hex.terrain = "forest";
+		hex.quests = "no quests here";
+		hex.locations = "a cave, a stream";
+
+		// update the text on the screen
+		tileText.text = "Terrain: " + hex.terrain + "\nQuests: " + hex.quests + "\nLocations: " + hex.locations;
+	}
+
+
+
+
+
+// define and start states
+game.state.add('Play', Play);
+game.state.start('Play');
