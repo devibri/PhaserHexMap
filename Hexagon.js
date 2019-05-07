@@ -1,3 +1,5 @@
+// Hexagon prefab
+
 var button;
 var tileText;
 

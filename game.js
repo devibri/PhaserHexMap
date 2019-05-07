@@ -1,3 +1,4 @@
+// Manages the main game state
 
 var game = new Phaser.Game(1140, 800, Phaser.AUTO);
 var hexagonWidth = 80;
@@ -13,6 +14,7 @@ var marker;
 var hexagonGroup;
 var hexagonArray = [];
 var hex;
+var terrainArray = [];
 
 var Play = function(game) {
 };
@@ -22,13 +24,26 @@ Play.prototype = {
 		game.load.image("hexagon", "hexagon.png");
 		game.load.image("hexagon_selected", "hexagon-selected.png");
 		game.load.image("hexagon_generated", "hexagon-filled.png");
+		game.load.image("hexagon_desert", "hexagon-desert.png");
+		game.load.image("hexagon_forest", "hexagon-forest.png");
+		game.load.image("hexagon_hills", "hexagon-hills.png");
+		game.load.image("hexagon_mountains", "hexagon-mountain.png");
+		game.load.image("hexagon_water", "hexagon-ocean.png");
+		game.load.image("hexagon_fields", "hexagon-plains.png");
+		game.load.image("hexagon_swamp", "hexagon-swamp.png");
+		game.load.image("hexagon_town", "hexagon-town.png");
 		game.load.image("marker", "marker.png");
 		game.load.image("button", "button_generate.png");
 	},
 	create: function() {
-		tileText = game.add.text(40, 100, "[Tile info]");
+		// Define tile text
+		tileText = game.add.text(40, 100, "");
 		tileText.font = "arial";
 		tileText.fontSize = 24;
+
+		// Define types of tiles
+		terrainArray = ["Water", "Swamp", "Desert", "Fields", "Forest", "Hills", "Mountains", "Town"];
+
 
 		hexagonGroup = game.add.group();
 		game.stage.backgroundColor = "#ffffff"
@@ -193,7 +208,25 @@ function colorHex(posX,posY){
 		for(var j = 0; j < gridSizeY; j ++){
 			if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
 				if (hexagonArray[i][j].isGenerated) {
-						hexagonArray[i][j].loadTexture('hexagon_generated', 0);
+						if (hexagonArray[i][j].terrain == "Water") {
+							hexagonArray[i][j].loadTexture('hexagon_water', 0);
+						} else if (hexagonArray[i][j].terrain == "Swamp") {
+							hexagonArray[i][j].loadTexture('hexagon_swamp', 0);
+						} else if (hexagonArray[i][j].terrain == "Desert") {
+							hexagonArray[i][j].loadTexture('hexagon_desert', 0);
+						} else if (hexagonArray[i][j].terrain == "Fields") {
+							hexagonArray[i][j].loadTexture('hexagon_fields', 0);
+						} else if (hexagonArray[i][j].terrain == "Forest") {
+							hexagonArray[i][j].loadTexture('hexagon_forest', 0);
+						} else if (hexagonArray[i][j].terrain == "Hills") {
+							hexagonArray[i][j].loadTexture('hexagon_hills', 0);
+						} else if (hexagonArray[i][j].terrain == "Mountains") {
+							hexagonArray[i][j].loadTexture('hexagon_mountains', 0);
+						} else if (hexagonArray[i][j].terrain == "Town") {
+							hexagonArray[i][j].loadTexture('hexagon_town', 0);
+						} else {
+							hexagonArray[i][j].loadTexture('hexagon_generated', 0);
+						}
 					} else {
 					hexagonArray[i][j].loadTexture('hexagon', 0);
 				}
@@ -229,11 +262,33 @@ function colorHex(posX,posY){
 function actionOnGenerate() {
 		hex.isGenerated = true;
 
-		// change the hex color to generated color
-		hex.loadTexture('hexagon_generated', 0);
+
+		var terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
+
+
+				// change the hex color to generated color
+		if (terrain == "Water") {
+			hex.loadTexture('hexagon_water', 0);
+		} else if (terrain == "Swamp") {
+			hex.loadTexture('hexagon_swamp', 0);
+		} else if (terrain == "Desert") {
+			hex.loadTexture('hexagon_desert', 0);
+		} else if (terrain == "Fields") {
+			hex.loadTexture('hexagon_fields', 0);
+		} else if (terrain == "Forest") {
+			hex.loadTexture('hexagon_forest', 0);
+		} else if (terrain == "Hills") {
+			hex.loadTexture('hexagon_hills', 0);
+		} else if (terrain == "Mountains") {
+			hex.loadTexture('hexagon_mountains', 0);
+		} else if (terrain == "Town") {
+			hex.loadTexture('hexagon_town', 0);
+		} else {
+			hex.loadTexture('hexagon_generated', 0);
+		}
 
 		// generate and set the field values
-		hex.terrain = "forest";
+		hex.terrain = terrain;
 		hex.quests = "no quests here";
 		hex.locations = "a cave, a stream";
 
