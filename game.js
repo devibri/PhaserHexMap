@@ -1,6 +1,6 @@
 // Manages the main game state
 
-var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
+var game = new Phaser.Game(1200, 800, Phaser.AUTO);
 var hexagonWidth = 80;
 var hexagonHeight = 70;
 var gridSizeX = 10;
