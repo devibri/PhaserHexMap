@@ -1,6 +1,6 @@
 // Manages the main game state
 
-var game = new Phaser.Game(1140, 800, Phaser.AUTO);
+var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 var hexagonWidth = 80;
 var hexagonHeight = 70;
 var gridSizeX = 10;
@@ -40,6 +40,8 @@ Play.prototype = {
 		tileText = game.add.text(40, 100, "");
 		tileText.font = "arial";
 		tileText.fontSize = 24;
+		tileText.style.wordWrap = true;
+		tileText.style.wordWrapWidth = 250;
 
 		// Define types of tiles
 		terrainArray = ["Water", "Swamp", "Desert", "Fields", "Forest", "Hills", "Mountains", "Town"];
@@ -148,10 +150,12 @@ function checkClickedHex(){
 }
 
 function placeMarker(posX,posY){
+//	marker.visible=true;
 	for(var i = 0; i < gridSizeX/2; i ++){
 		for(var j = 0; j < gridSizeY; j ++){
 			if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
 				hexagonArray[i][j].tint = 0xffffff;
+				//marker.visible=true;
 			}
 		}
 	}
@@ -207,27 +211,28 @@ function colorHex(posX,posY){
 	for(var i = 0; i < gridSizeX/2; i ++){
 		for(var j = 0; j < gridSizeY; j ++){
 			if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
+				hexagonArray[i][j].tint = 0xffffff;
 				if (hexagonArray[i][j].isGenerated) {
-						if (hexagonArray[i][j].terrain == "Water") {
-							hexagonArray[i][j].loadTexture('hexagon_water', 0);
-						} else if (hexagonArray[i][j].terrain == "Swamp") {
-							hexagonArray[i][j].loadTexture('hexagon_swamp', 0);
-						} else if (hexagonArray[i][j].terrain == "Desert") {
-							hexagonArray[i][j].loadTexture('hexagon_desert', 0);
-						} else if (hexagonArray[i][j].terrain == "Fields") {
-							hexagonArray[i][j].loadTexture('hexagon_fields', 0);
-						} else if (hexagonArray[i][j].terrain == "Forest") {
-							hexagonArray[i][j].loadTexture('hexagon_forest', 0);
-						} else if (hexagonArray[i][j].terrain == "Hills") {
-							hexagonArray[i][j].loadTexture('hexagon_hills', 0);
-						} else if (hexagonArray[i][j].terrain == "Mountains") {
-							hexagonArray[i][j].loadTexture('hexagon_mountains', 0);
-						} else if (hexagonArray[i][j].terrain == "Town") {
-							hexagonArray[i][j].loadTexture('hexagon_town', 0);
-						} else {
-							hexagonArray[i][j].loadTexture('hexagon_generated', 0);
-						}
+					if (hexagonArray[i][j].terrain == "Water") {
+						hexagonArray[i][j].loadTexture('hexagon_water', 0);
+					} else if (hexagonArray[i][j].terrain == "Swamp") {
+						hexagonArray[i][j].loadTexture('hexagon_swamp', 0);
+					} else if (hexagonArray[i][j].terrain == "Desert") {
+						hexagonArray[i][j].loadTexture('hexagon_desert', 0);
+					} else if (hexagonArray[i][j].terrain == "Fields") {
+						hexagonArray[i][j].loadTexture('hexagon_fields', 0);
+					} else if (hexagonArray[i][j].terrain == "Forest") {
+						hexagonArray[i][j].loadTexture('hexagon_forest', 0);
+					} else if (hexagonArray[i][j].terrain == "Hills") {
+						hexagonArray[i][j].loadTexture('hexagon_hills', 0);
+					} else if (hexagonArray[i][j].terrain == "Mountains") {
+						hexagonArray[i][j].loadTexture('hexagon_mountains', 0);
+					} else if (hexagonArray[i][j].terrain == "Town") {
+						hexagonArray[i][j].loadTexture('hexagon_town', 0);
 					} else {
+						hexagonArray[i][j].loadTexture('hexagon_generated', 0);
+					}
+				} else {
 					hexagonArray[i][j].loadTexture('hexagon', 0);
 				}
 			}
@@ -260,41 +265,41 @@ function colorHex(posX,posY){
 }
 
 function actionOnGenerate() {
-		hex.isGenerated = true;
+	hex.isGenerated = true;
 
 
-		var terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
+	var terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
 
 
-				// change the hex color to generated color
-		if (terrain == "Water") {
-			hex.loadTexture('hexagon_water', 0);
-		} else if (terrain == "Swamp") {
-			hex.loadTexture('hexagon_swamp', 0);
-		} else if (terrain == "Desert") {
-			hex.loadTexture('hexagon_desert', 0);
-		} else if (terrain == "Fields") {
-			hex.loadTexture('hexagon_fields', 0);
-		} else if (terrain == "Forest") {
-			hex.loadTexture('hexagon_forest', 0);
-		} else if (terrain == "Hills") {
-			hex.loadTexture('hexagon_hills', 0);
-		} else if (terrain == "Mountains") {
-			hex.loadTexture('hexagon_mountains', 0);
-		} else if (terrain == "Town") {
-			hex.loadTexture('hexagon_town', 0);
-		} else {
-			hex.loadTexture('hexagon_generated', 0);
-		}
-
-		// generate and set the field values
-		hex.terrain = terrain;
-		hex.quests = "no quests here";
-		hex.locations = "a cave, a stream";
-
-		// update the text on the screen
-		tileText.text = "Terrain: " + hex.terrain + "\nQuests: " + hex.quests + "\nLocations: " + hex.locations;
+	// change the hex color to generated color
+	if (terrain == "Water") {
+		hex.loadTexture('hexagon_water', 0);
+	} else if (terrain == "Swamp") {
+		hex.loadTexture('hexagon_swamp', 0);
+	} else if (terrain == "Desert") {
+		hex.loadTexture('hexagon_desert', 0);
+	} else if (terrain == "Fields") {
+		hex.loadTexture('hexagon_fields', 0);
+	} else if (terrain == "Forest") {
+		hex.loadTexture('hexagon_forest', 0);
+	} else if (terrain == "Hills") {
+		hex.loadTexture('hexagon_hills', 0);
+	} else if (terrain == "Mountains") {
+		hex.loadTexture('hexagon_mountains', 0);
+	} else if (terrain == "Town") {
+		hex.loadTexture('hexagon_town', 0);
+	} else {
+		hex.loadTexture('hexagon_generated', 0);
 	}
+
+	// generate and set the field values
+	hex.terrain = terrain;
+	hex.quests = "no quests here";
+	hex.locations = "a cave, a stream";
+
+	// update the text on the screen
+	tileText.text = "Terrain: " + hex.terrain + "\nQuests: " + hex.quests + "\nLocations: " + hex.locations;
+}
 
 // define and start states
 game.state.add('Play', Play);
