@@ -1,0 +1,15 @@
+Chef
+Blacksmith
+Colonist
+Adventurer
+Sellsword
+Trader
+Fisherperson
+Politician
+Guard
+Bartender
+Innkeeper
+Bodyguard
+Spy
+Soldier
+Baker
