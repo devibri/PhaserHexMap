@@ -11,7 +11,6 @@ function Hexagon(game, key, x, y) {
 	this.key = key;
 	this.isGenerated = false;
 	this.encounter = "";
-	
 }
 
 Hexagon.prototype = Object.create(Phaser.Sprite.prototype);

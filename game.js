@@ -49,31 +49,6 @@ Play.prototype = {
 		// Define types of tiles
 		terrainArray = ["Swamp", "Desert", "Fields", "Forest", "Hills", "Mountains", "Town"];
 
-		encountersArray = ["Settlement", "Fort", "Ruin", "Monster Lair", "Wandering Monster", "Camp", "Way-station", "Construction Site", "Battlefield", "Isolated", "Sacred Ground", "Crossing", "Ancient Structure", "Natural Phenomenon", "Treasure", "Contested Area", "Natural Resource", "Supernatural Feature", "Gathering Place"]
-
-
-		//
-		// questArraySwamp = [
-		// 	"Swarms of insects surround the party, biting at your arms and legs...",
-		// 	"As you wander a small area of the swamp, you start to realize it is sinking...",
-		// 	"You meet a witch in the woods named {charName} who wants you to find some ingredients...",
-		// 	"Something strange and shiny is laying at the bottom of a lake you find...",
-		// 	"Some say that these swamps were the site of sunken treasure. Those who have gone diving for it have never returned..."
-		// ];
-		//
-		// questArrayDesert = [
-		// 	"Sand swirls up around you in a strange way, almost as if imbued with some kind of power. It shifts into a strange living form...",
-		// 	"You find ancient ruins among the sands, the remnants of some long-forgotten desert people...",
-		// 	"There is a hole deep in the sands here. Perhaps it is the burrow of some giant animal? Perhaps it holds treasure...",
-		// 	"The sun beats down on the party, hot and heavy. Fortunately it seems like there is an oasis just ahead...",
-		// 	"You see a group of {desertCreature}s out patrolling the desert..."
-		// ];
-		//
-		//
-		// questArrayPlains = [
-		// 	"The grass here grows taller than even the tallest of your heads. As you wander, you hear noises behind you..."
-		// ];
-
 		hexagonGroup = game.add.group();
 		game.stage.backgroundColor = "#ffffff"
 		for(var i = 0; i < gridSizeX/2; i ++){
@@ -293,38 +268,34 @@ function colorHex(posX,posY){
 function actionOnGenerate() {
 	hex.isGenerated = true;
 
-	var terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
-	var encounter = encountersArray[Math.floor(Math.random()*encountersArray.length)];
-	var npc = new Npc(this.game);
+	// generate and set the field values
+	hex.terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
+	hex.encounters = new Encounter(this.game, hex);
+	hex.npcs = new Npc(this.game);
 
 	// change the hex color to generated color
-	if (terrain == "Water") {
+	if (hex.terrain == "Water") {
 		hex.loadTexture('hexagon_water', 0);
-	} else if (terrain == "Swamp") {
+	} else if (hex.terrain == "Swamp") {
 		hex.loadTexture('hexagon_swamp', 0);
-	} else if (terrain == "Desert") {
+	} else if (hex.terrain == "Desert") {
 		hex.loadTexture('hexagon_desert', 0);
-	} else if (terrain == "Fields") {
+	} else if (hex.terrain == "Fields") {
 		hex.loadTexture('hexagon_fields', 0);
-	} else if (terrain == "Forest") {
+	} else if (hex.terrain == "Forest") {
 		hex.loadTexture('hexagon_forest', 0);
-	} else if (terrain == "Hills") {
+	} else if (hex.terrain == "Hills") {
 		hex.loadTexture('hexagon_hills', 0);
-	} else if (terrain == "Mountains") {
+	} else if (hex.terrain == "Mountains") {
 		hex.loadTexture('hexagon_mountains', 0);
-	} else if (terrain == "Town") {
+	} else if (hex.terrain == "Town") {
 		hex.loadTexture('hexagon_town', 0);
 	} else {
 		hex.loadTexture('hexagon_generated', 0);
 	}
 
-	// generate and set the field values
-	hex.terrain = terrain;
-	hex.encounters = encounter;
-	hex.npcs = npc;
-
 	// update the text on the screen
-	hex.tileText = "Terrain: " + hex.terrain + "\nEncounters: " + hex.encounters + "\nNPCs: " + hex.npcs.name + " the " + hex.npcs.occupation;
+	hex.tileText = "Terrain: " + hex.terrain + "\nEncounters: " + hex.encounters.encounterType + "\nEncounter details: " + hex.encounters.encounterDetails + "\nNPCs: " + hex.npcs.name + " the " + hex.npcs.occupation;
 	tileText.text = hex.tileText;
 }
 
