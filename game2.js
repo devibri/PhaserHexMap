@@ -23,7 +23,7 @@ Play.prototype = {
 		questText.font = "arial";
 		questText.fontSize = 24;
 		questText.style.wordWrap = true;
-		questText.style.wordWrapWidth = 1000;
+		questText.style.wordWrapWidth = 250;
 		npcText.font = "arial";
 		npcText.fontSize = 24;
 		npcText.style.wordWrap = true;
@@ -41,7 +41,7 @@ Play.prototype = {
 			npc = npcArray[i];
 			npcName = game.add.text(300, height, npc.name);
 			npcName.inputEnabled = true;
-			npcName.events.onInputUp.add(up, this);
+			npcName.events.onInputUp.add(killNPC, this);
 			height = height + 30;
 		}
 
@@ -54,11 +54,37 @@ Play.prototype = {
 function actionOnGenerate() {
 	// update the text on the screen
 	var quest = new Quest(this.game);
-	questText.text = quest.questText;
+	if (quest.questType == "Revenge") {
+		npc = findDeadNPC();
+		questText.text = "Someone is seeking revenge for the death of " + npc.name;
+	} else {
+			questText.text = quest.questText;
+	}
 }
 
-function up(item) {
-  item.fill = "#ff0044";
+function killNPC(nameText) {
+	nameText.fill = "#ff0044";
+	npc = findNPC(nameText);
+	npc.isAlive = false;
+}
+
+function findNPC(name) {
+	for (var i = 0; i < npcArray.length; i++) {
+		if (name.text == npcArray[i].name) {
+			return npcArray[i];
+		}
+	}
+}
+
+// Returns a random dead NPC
+function findDeadNPC() {
+	var deadNPCArray = [];
+	for (var i = 0; i < npcArray.length; i++) {
+		if (!npcArray[i].isAlive) {
+			deadNPCArray[i] = npcArray[i];
+		}
+	}
+	return deadNPCArray[Math.floor(Math.random()*deadNPCArray.length)];
 }
 
 // define and start states
