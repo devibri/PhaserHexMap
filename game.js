@@ -18,6 +18,7 @@ var hexagonGroup;
 var hexagonArray = [];
 var hex;
 var terrainArray = [];
+var npcArray = [];
 
 var Play = function(game) {
 };
