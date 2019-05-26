@@ -2,11 +2,11 @@
 
 var nameList;
 
-function Npc(game) {
-	nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
+function Npc(game, name) {
 	occupationList = ["Chef","Blacksmith","Colonist","Adventurer","Sellsword","Trader","Fisherperson","Politician","Guard","Bartender","Innkeeper","Bodyguard","Spy","Soldier","Baker"]
 	//NPC stats
-	this.name = nameList[Math.floor(Math.random()*nameList.length)];
+	this.name = name;
+
 	this.occupation = occupationList[Math.floor(Math.random()*occupationList.length)];;
 	this.isAlive = true;
 }
