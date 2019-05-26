@@ -16,6 +16,7 @@ Play.prototype = {
 	},
 	create: function() {
 		// Define tile text
+		var height = 130;
 		questText = game.add.text(40, 100, "");
 		npcText = game.add.text(300, 100, "NPCs:");
 
@@ -36,9 +37,13 @@ Play.prototype = {
 
 		questText.text = "[Not yet generated]";
 
-		npcArray.forEach(function(npc) {
-    	npcText.text = npcText.text + "\n" + npc.name;
-		});
+		for (var i = 0; i < npcArray.length; i++) {
+			npc = npcArray[i];
+			npcName = game.add.text(300, height, npc.name);
+			npcName.inputEnabled = true;
+			npcName.events.onInputUp.add(up, this);
+			height = height + 30;
+		}
 
 		button = game.add.button(40, 50, 'button', actionOnGenerate, this);
 	}
@@ -50,6 +55,10 @@ function actionOnGenerate() {
 	// update the text on the screen
 	var quest = new Quest(this.game);
 	questText.text = quest.questText;
+}
+
+function up(item) {
+  item.fill = "#ff0044";
 }
 
 // define and start states
