@@ -21,6 +21,11 @@ Play.prototype = {
 		game.load.image("button", "img/button_generate.png");
 	},
 	create: function() {
+		/* *** MAKE YOUR OWN CAMPAIGN ***
+		* Use this section to modify the values below to customize your own campaign
+		*/
+		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
+
 		// Define tile text
 		height = 130;
 		questText = game.add.text(40, 100, "");
@@ -34,8 +39,6 @@ Play.prototype = {
 		npcText.fontSize = 24;
 		npcText.style.wordWrap = true;
 		npcText.style.wordWrapWidth = 1000;
-
-		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 
 		// Pre-seed the world with some random NPCs
 		for (var i = 0; i < 4; i++) {
