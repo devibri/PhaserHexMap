@@ -21,11 +21,6 @@ Play.prototype = {
 		game.load.image("button", "img/button_generate.png");
 	},
 	create: function() {
-		/* *** MAKE YOUR OWN CAMPAIGN ***
-		* Use this section to modify the values below to customize your own campaign
-		*/
-		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
-
 		// Define tile text
 		height = 130;
 		questText = game.add.text(40, 100, "");
@@ -39,6 +34,8 @@ Play.prototype = {
 		npcText.fontSize = 24;
 		npcText.style.wordWrap = true;
 		npcText.style.wordWrapWidth = 1000;
+
+		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 
 		// Pre-seed the world with some random NPCs
 		for (var i = 0; i < 4; i++) {
@@ -64,7 +61,7 @@ function actionOnGenerate() {
 	var quest = new Quest(this.game);
 	if (quest.questType == "Revenge") {
 		npc = findDeadNPC();
-		questText.text = "Someone is seeking revenge for the death of " + npc.name + " the " + npc.occupation;
+		questText.text = "Someone is seeking revenge for the death of " + npc.name;
 	} else {
 			questText.text = quest.questText;
 	}
@@ -117,7 +114,7 @@ function findDeadNPC() {
 }
 
 function addNPCName(npc) {
-	npcName = game.add.text(500, height, npc.name + " the " + npc.occupation);
+	npcName = game.add.text(500, height, npc.name);
 	npcName.inputEnabled = true;
 	npcName.events.onInputUp.add(killNPC, this);
 	if (!npc.isAlive){
