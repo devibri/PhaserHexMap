@@ -18,7 +18,8 @@ var Play = function(game) {
 
 Play.prototype = {
 	preload: function() {
-		game.load.image("button", "img/button_generate.png");
+		game.load.image("button", "img/button_new-quest.png");
+		game.load.image("npcAddButton", "img/button_new-npc.png");
 	},
 	create: function() {
 		// Define tile text
@@ -37,6 +38,8 @@ Play.prototype = {
 
 		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 
+		questList = [];
+
 		// Pre-seed the world with some random NPCs
 		for (var i = 0; i < 4; i++) {
 			npcArray[i] = new Npc(this.game, getNPCName());
@@ -52,11 +55,13 @@ Play.prototype = {
 			addNPCName(npc);
 		}
 
-		button = game.add.button(40, 50, 'button', actionOnGenerate, this);
+		//npcAddButton = game.add.button(600, 100, 'npcAddButton', addNPC, this);
+		button = game.add.button(40, 50, 'button', actionOnAddQuest, this);
+		npcAddButton = game.add.button(600, 100, 'npcAddButton', actionOnAddNPC, this);
 	}
 };
 
-function actionOnGenerate() {
+function actionOnAddQuest() {
 	// update the text on the screen
 	var quest = new Quest(this.game);
 	if (quest.questType == "Revenge") {
@@ -67,10 +72,16 @@ function actionOnGenerate() {
 	}
 }
 
+function actionOnAddNPC() {
+	let npc = new Npc(this.game, getNPCName());
+	npcArray.push(npc);
+	addNPCName(npc);
+}
+
 function killNPC(nameText) {
+	let npc = findNPC(nameText);
 	if (npc.isAlive) {
 		nameText.fill = "#ff0044";
-		npc = findNPC(nameText);
 		npc.isAlive = false;
 		deadNPCArray.push(npc);
 	} else {
