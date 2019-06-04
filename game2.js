@@ -26,8 +26,9 @@ Play.prototype = {
 	create: function() {
 		// Define tile text
 		height = 130;
+		height_quest = 130;
 		questText = game.add.text(40, 100, "Quests:");
-		npcText = game.add.text(500, 100, "NPCs:");
+		npcText = game.add.text(800, 100, "NPCs:");
 
 		questText.font = "arial";
 		questText.fontSize = 24;
@@ -57,9 +58,8 @@ Play.prototype = {
 			addNPCName(npc);
 		}
 
-		//npcAddButton = game.add.button(600, 100, 'npcAddButton', addNPC, this);
 		button = game.add.button(40, 50, 'button', actionOnAddQuest, this);
-		npcAddButton = game.add.button(600, 100, 'npcAddButton', actionOnAddNPC, this);
+		npcAddButton = game.add.button(800, 50, 'npcAddButton', actionOnAddNPC, this);
 	}
 };
 
@@ -68,13 +68,14 @@ function actionOnAddQuest() {
 	// update the text on the screen
 	let quest = new Quest(this.game);
 	questList.push(quest);
-	addQuestText(quest);
+
 	if (quest.type == "Revenge") {
 		npc = findDeadNPC();
 		quest.text = "Someone is seeking revenge for the death of " + npc.name;
 	} else {
 			quest.text = quest.text;
 	}
+	addQuestText(quest);
 }
 
 // Adds a new NPC to the list of NPCs
@@ -132,15 +133,13 @@ function findDeadNPC() {
 	}
 }
 
-
 // Adds the quest text to the list of quest texts
 function addQuestText(quest) {
-	questText.text = questText.text + "\n" + quest.text;
-	//questText = game.add.text(200, height_quest, quest.text);
-	questText.inputEnabled = true;
-	questText.events.onInputUp.add(questComplete, this);
+	questDesc =  game.add.text(40, height_quest, quest.text);
+	questDesc.inputEnabled = true;
+	questDesc.events.onInputUp.add(questComplete, this);
 	if (quest.isComplete){
-		questText.fill = "#39B53D";
+		questDesc.fill = "#39B53D";
 	}
 	height_quest = height_quest + 30;
 }
@@ -152,7 +151,7 @@ function questComplete() {
 
 // Adds the NPC to the list of NPC names
 function addNPCName(npc) {
-	npcName = game.add.text(500, height, npc.name);
+	npcName = game.add.text(800, height, npc.name);
 	npcName.inputEnabled = true;
 	npcName.events.onInputUp.add(killNPC, this);
 	if (!npc.isAlive){
