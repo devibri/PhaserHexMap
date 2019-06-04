@@ -11,6 +11,8 @@ var npcText;
 var height;
 var npcName;
 var nameList;
+var height_quest;
+var questList;
 
 
 var Play = function(game) {
@@ -24,7 +26,7 @@ Play.prototype = {
 	create: function() {
 		// Define tile text
 		height = 130;
-		questText = game.add.text(40, 100, "");
+		questText = game.add.text(40, 100, "Quests:");
 		npcText = game.add.text(500, 100, "NPCs:");
 
 		questText.font = "arial";
@@ -47,7 +49,7 @@ Play.prototype = {
 
 		game.stage.backgroundColor = "#ffffff"
 
-		questText.text = "[Not yet generated]";
+		questText.text = "Quests:";
 
 		// Add all NPCs to list of NPCs displayed; make names clickable
 		for (var i = 0; i < npcArray.length; i++) {
@@ -61,23 +63,28 @@ Play.prototype = {
 	}
 };
 
+// Adds a quest to the list of quests
 function actionOnAddQuest() {
 	// update the text on the screen
-	var quest = new Quest(this.game);
-	if (quest.questType == "Revenge") {
+	let quest = new Quest(this.game);
+	questList.push(quest);
+	addQuestText(quest);
+	if (quest.type == "Revenge") {
 		npc = findDeadNPC();
-		questText.text = "Someone is seeking revenge for the death of " + npc.name;
+		quest.text = "Someone is seeking revenge for the death of " + npc.name;
 	} else {
-			questText.text = quest.questText;
+			quest.text = quest.text;
 	}
 }
 
+// Adds a new NPC to the list of NPCs
 function actionOnAddNPC() {
 	let npc = new Npc(this.game, getNPCName());
 	npcArray.push(npc);
 	addNPCName(npc);
 }
 
+// Fills an NPC on click
 function killNPC(nameText) {
 	let npc = findNPC(nameText);
 	if (npc.isAlive) {
@@ -91,6 +98,7 @@ function killNPC(nameText) {
 	}
 }
 
+// Finds an NPC value based on a name
 function findNPC(name) {
 	for (var i = 0; i < npcArray.length; i++) {
 		if (name.text == npcArray[i].name) {
@@ -124,6 +132,25 @@ function findDeadNPC() {
 	}
 }
 
+
+// Adds the quest text to the list of quest texts
+function addQuestText(quest) {
+	questText.text = questText.text + "\n" + quest.text;
+	//questText = game.add.text(200, height_quest, quest.text);
+	questText.inputEnabled = true;
+	questText.events.onInputUp.add(questComplete, this);
+	if (quest.isComplete){
+		questText.fill = "#39B53D";
+	}
+	height_quest = height_quest + 30;
+}
+
+// What happens when you click / complete a quest
+function questComplete() {
+
+}
+
+// Adds the NPC to the list of NPC names
 function addNPCName(npc) {
 	npcName = game.add.text(500, height, npc.name);
 	npcName.inputEnabled = true;
@@ -134,6 +161,7 @@ function addNPCName(npc) {
 	height = height + 30;
 }
 
+// Finds the name of an NPC
 function getNPCName() {
 	let index = Math.floor(Math.random()*nameList.length);
 	let name = nameList[index];

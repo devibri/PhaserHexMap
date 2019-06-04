@@ -4,9 +4,10 @@ function Quest(game) {
   this.npcs = []; //array of all NPCs associated with this quest
   questTypeList = ["Faction", "Exploration", "Revenge"];
   this.questGiver = null; // The NPC giving the quest
+  this.isComplete = false;
 
-  this.questType = questTypeList[Math.floor(Math.random()*questTypeList.length)];
-  this.questText = setQuestText(this.questType);
+  this.type = questTypeList[Math.floor(Math.random()*questTypeList.length)];
+  this.text = setQuestText(this.type);
 }
 
 Quest.prototype = Object.create(Phaser.Sprite.prototype);
