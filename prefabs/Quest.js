@@ -1,4 +1,4 @@
-// Encounter prefab
+// Quest prefab
 
 function Quest(game) {
   this.npcs = []; //array of all NPCs associated with this quest

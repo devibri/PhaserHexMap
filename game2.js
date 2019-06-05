@@ -4,8 +4,8 @@
 // List of encounter types taken from: https://www.welshpiper.com/hex-based-campaign-design-part-2/
 
 var game = new Phaser.Game(1200, 800, Phaser.AUTO);
-var npcArray = [];
-var deadNPCArray = [];
+var npcArray;
+var deadNPCArray;
 var questText;
 var npcText;
 var height;
@@ -14,6 +14,7 @@ var nameList;
 var height_quest;
 var questList;
 var questDesc;
+var factionList;
 
 
 var Play = function(game) {
@@ -33,6 +34,9 @@ Play.prototype = {
 
 		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 		questList = [];
+		npcArray = [];
+		deadNPCArray = [];
+		factionList = [];
 
 		game.stage.backgroundColor = "#ffffff"
 
@@ -47,8 +51,19 @@ function actionOnAddQuest() {
 	let quest = new Quest(this.game);
 	questList.push(quest);
 
-	if (quest.type == "Revenge") {
-		npc = findDeadNPC();
+	// Deals with adding faction quests
+	if (quest.type == "Faction") {
+		let faction1 = new Faction(this.game);
+		faction1 = new Faction(this.game);
+		let faction2 = new Faction(this.game);
+
+		while (faction1.name == faction2.name) {
+			faction2 = new Faction(this.game);
+		}
+		quest.text = faction1.name + " wants to attack " + faction2.name;
+		console.log(quest.text);
+	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
+		let npc = findDeadNPC();
 		quest.text = "Someone wants revenge for the death of " + npc.name;
 	} else {
 			quest.text = quest.text;

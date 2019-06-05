@@ -12,6 +12,7 @@ function Npc(game, name) {
 	this.name = name;
 	this.occupation = occupationList[Math.floor(Math.random()*occupationList.length)];
 	this.isAlive = true;
+	this.faction = "Neutral";
 }
 
 Npc.prototype = Object.create(Phaser.Sprite.prototype);
