@@ -49,7 +49,7 @@ function actionOnAddQuest() {
 
 	if (quest.type == "Revenge") {
 		npc = findDeadNPC();
-		quest.text = "Someone is seeking revenge for the death of " + npc.name;
+		quest.text = "Someone wants revenge for the death of " + npc.name;
 	} else {
 			quest.text = quest.text;
 	}
@@ -80,7 +80,7 @@ function killNPC(nameText) {
 // Finds an NPC value based on a name
 function findNPC(name) {
 	for (var i = 0; i < npcArray.length; i++) {
-		if (name.text == npcArray[i].name) {
+		if (name.text == npcArray[i].name + " the " + npcArray[i].occupation) {
 			return npcArray[i];
 		}
 	}
@@ -89,7 +89,7 @@ function findNPC(name) {
 // Removes an NPC's name from the dead NPC list when setting them back to alive
 function removeDeadNPC(name) {
 	for (var i = 0; i < deadNPCArray.length; i++) {
-		if (name.text == deadNPCArray[i].name) {
+		if (name.text == deadNPCArray[i].name + " the " + deadNPCArray[i].occupation) {
 			deadNPCArray.splice(i, 1);
 		}
 	}
@@ -113,12 +113,12 @@ function findDeadNPC() {
 
 // Adds the NPC to the list of NPC names
 function addNPCName(npc) {
-	npcName = game.add.text(800, height_npc, npc.name);
+	npcName = game.add.text(800, height_npc, npc.name + " the " + npc.occupation);
 
 	npcName.font = "arial";
 	npcName.fontSize = 24;
 	npcName.style.wordWrap = true;
-	npcName.style.wordWrapWidth = 200;
+	npcName.style.wordWrapWidth = 400;
 
 	npcName.inputEnabled = true;
 	npcName.events.onInputUp.add(killNPC, this);
@@ -147,7 +147,7 @@ function addQuestText(quest) {
 	questDesc.style.wordWrapWidth = 750;
 
 	questDesc.inputEnabled = true;
-	questDesc.events.onInputUp.add(questComplete, quest, this);
+	questDesc.events.onInputUp.add(completeQuest, this);
 
 	if (quest.isComplete){
 		questDesc.fill = "#39B53D";
@@ -156,9 +156,19 @@ function addQuestText(quest) {
 }
 
 // What happens when you click / complete a quest
-function questComplete(quest, questDesc) {
-	//quest.isComplete = true;
+function completeQuest(questDesc) {
+	let quest = findQuest(questDesc);
+	quest.isComplete = true;
 	questDesc.fill = "#39B53D";
+}
+
+// Finds an NPC value based on a name
+function findQuest(questDesc) {
+	for (var i = 0; i < questList.length; i++) {
+		if (questDesc.text == questList[i].text) {
+			return questList[i];
+		}
+	}
 }
 
 

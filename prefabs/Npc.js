@@ -10,7 +10,7 @@ function Npc(game, name) {
 
 	//NPC stats
 	this.name = name;
-	this.occupation = occupationList[Math.floor(Math.random()*occupationList.length)];;
+	this.occupation = occupationList[Math.floor(Math.random()*occupationList.length)];
 	this.isAlive = true;
 }
 
