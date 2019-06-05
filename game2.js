@@ -13,6 +13,7 @@ var npcName;
 var nameList;
 var height_quest;
 var questList;
+var questDesc;
 
 
 var Play = function(game) {
@@ -25,38 +26,15 @@ Play.prototype = {
 	},
 	create: function() {
 		// Define tile text
-		height = 130;
+		height_npc = 130;
 		height_quest = 130;
 		questText = game.add.text(40, 100, "Quests:");
 		npcText = game.add.text(800, 100, "NPCs:");
 
-		questText.font = "arial";
-		questText.fontSize = 24;
-		questText.style.wordWrap = true;
-		questText.style.wordWrapWidth = 450;
-		npcText.font = "arial";
-		npcText.fontSize = 24;
-		npcText.style.wordWrap = true;
-		npcText.style.wordWrapWidth = 1000;
-
 		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
-
 		questList = [];
 
-		// Pre-seed the world with some random NPCs
-		for (var i = 0; i < 4; i++) {
-			npcArray[i] = new Npc(this.game, getNPCName());
-		}
-
 		game.stage.backgroundColor = "#ffffff"
-
-		questText.text = "Quests:";
-
-		// Add all NPCs to list of NPCs displayed; make names clickable
-		for (var i = 0; i < npcArray.length; i++) {
-			npc = npcArray[i];
-			addNPCName(npc);
-		}
 
 		button = game.add.button(40, 50, 'button', actionOnAddQuest, this);
 		npcAddButton = game.add.button(800, 50, 'npcAddButton', actionOnAddNPC, this);
@@ -85,7 +63,7 @@ function actionOnAddNPC() {
 	addNPCName(npc);
 }
 
-// Fills an NPC on click
+// Kills an NPC on click
 function killNPC(nameText) {
 	let npc = findNPC(nameText);
 	if (npc.isAlive) {
@@ -133,31 +111,21 @@ function findDeadNPC() {
 	}
 }
 
-// Adds the quest text to the list of quest texts
-function addQuestText(quest) {
-	questDesc =  game.add.text(40, height_quest, quest.text);
-	questDesc.inputEnabled = true;
-	questDesc.events.onInputUp.add(questComplete, this);
-	if (quest.isComplete){
-		questDesc.fill = "#39B53D";
-	}
-	height_quest = height_quest + 30;
-}
-
-// What happens when you click / complete a quest
-function questComplete() {
-
-}
-
 // Adds the NPC to the list of NPC names
 function addNPCName(npc) {
-	npcName = game.add.text(800, height, npc.name);
+	npcName = game.add.text(800, height_npc, npc.name);
+
+	npcName.font = "arial";
+	npcName.fontSize = 24;
+	npcName.style.wordWrap = true;
+	npcName.style.wordWrapWidth = 200;
+
 	npcName.inputEnabled = true;
 	npcName.events.onInputUp.add(killNPC, this);
 	if (!npc.isAlive){
 		npcName.fill = "#ff0044";
 	}
-	height = height + 30;
+	height_npc = height_npc + 30;
 }
 
 // Finds the name of an NPC
@@ -167,6 +135,32 @@ function getNPCName() {
 	nameList.splice(index, 1);
 	return name;
 }
+
+// Adds the quest text to the list of quest texts
+function addQuestText(quest) {
+	questDesc =  game.add.text(40, height_quest, quest.text);
+
+	//set font
+	questDesc.font = "arial";
+	questDesc.fontSize = 24;
+	questDesc.style.wordWrap = true;
+	questDesc.style.wordWrapWidth = 750;
+
+	questDesc.inputEnabled = true;
+	questDesc.events.onInputUp.add(questComplete, quest, this);
+
+	if (quest.isComplete){
+		questDesc.fill = "#39B53D";
+	}
+	height_quest = height_quest + 30;
+}
+
+// What happens when you click / complete a quest
+function questComplete(quest, questDesc) {
+	//quest.isComplete = true;
+	questDesc.fill = "#39B53D";
+}
+
 
 // define and start states
 game.state.add('Play', Play);
