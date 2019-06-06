@@ -32,8 +32,8 @@ Play.prototype = {
 		height_npc = 130;
 		height_quest = 130;
 		height_location = 130;
-		width_npc = 700;
-		width_location = 1000;
+		width_npc = 675;
+		width_location = 975;
 		questText = game.add.text(40, 100, "Quests:");
 		npcText = game.add.text(width_npc, 100, "NPCs:");
 		locationText = game.add.text(width_location, 100, "Locations:");
@@ -104,6 +104,7 @@ function killNPC(nameText) {
 
 function actionOnAddLocation() {
 	let location = new Location(this.game);
+	location = new Location(this.game);
 	locationList.push(location);
 	addLocationText(location);
 }
@@ -197,12 +198,6 @@ function addLocationText(location) {
 	locationDesc.style.wordWrap = true;
 	locationDesc.style.wordWrapWidth = 750;
 
-	//locationDesc.inputEnabled = true;
-	//locationDesc.events.onInputUp.add(completeQuest, this);
-
-	// if (quest.isComplete){
-	// 	questDesc.fill = "#39B53D";
-	// }
 	height_location = height_location + 30;
 }
 
