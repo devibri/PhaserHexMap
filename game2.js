@@ -1,8 +1,5 @@
 // Manages the main game state
 
-// List of terrain types taken from: http://www.welshpiper.com/hex-based-campaign-design-part-1/
-// List of encounter types taken from: https://www.welshpiper.com/hex-based-campaign-design-part-2/
-
 var game = new Phaser.Game(1200, 800, Phaser.AUTO);
 var npcArray;
 var deadNPCArray;
@@ -26,15 +23,17 @@ Play.prototype = {
 		game.load.image("button", "img/button_new-quest.png");
 		game.load.image("npcAddButton", "img/button_new-npc.png");
 		game.load.image("locationAddButton", "img/button_new-location.png");
+		game.load.image("killButton", "img/button_kill.png");
 	},
 	create: function() {
 		// Define tile text
 		height_npc = 130;
-		height_quest = 130;
+		height_quest = 250;
 		height_location = 130;
 		width_npc = 675;
 		width_location = 975;
-		questText = game.add.text(40, 100, "Quests:");
+		detailText = game.add.text(40, 40, "[Details]");
+		questText = game.add.text(40, 220, "Quests:");
 		npcText = game.add.text(width_npc, 100, "NPCs:");
 		locationText = game.add.text(width_location, 100, "Locations:");
 
@@ -47,7 +46,7 @@ Play.prototype = {
 
 		game.stage.backgroundColor = "#ffffff"
 
-		button = game.add.button(40, 50, 'button', actionOnAddQuest, this);
+		button = game.add.button(40, 150, 'button', actionOnAddQuest, this);
 		npcAddButton = game.add.button(width_npc, 50, 'npcAddButton', actionOnAddNPC, this);
 		locationAddButton = game.add.button(width_location, 50, 'locationAddButton', actionOnAddLocation, this);
 	}
@@ -153,11 +152,28 @@ function addNPCName(npc) {
 	npcName.style.wordWrapWidth = 400;
 
 	npcName.inputEnabled = true;
-	npcName.events.onInputUp.add(killNPC, this);
+	//npcName.events.onInputUp.add(killNPC, this);
+	npcName.events.onInputUp.add(displayNPCInfo, this);
 	if (!npc.isAlive){
 		npcName.fill = "#ff0044";
 	}
 	height_npc = height_npc + 30;
+}
+
+function displayNPCInfo(nameText) {
+	let npc = findNPC(nameText);
+	detailText.text = "Name: " + npc.name + "\nOccupation: " + npc.occupation + "\nIs Alive: "// + npc.isAlive;
+	let isAliveText = game.add.text(150, 110, npc.isAlive);
+	isAliveText.inputEnabled = true;
+	isAliveText.events.onInputUp.add(setNPCLife, this);
+}
+
+function setNPCLife(isAliveText) {
+	if (isAliveText.text == "false") {
+		isAliveText.text = "true";
+	} else {
+		isAliveText.text = "false";
+	}
 }
 
 // Finds the name of an NPC
