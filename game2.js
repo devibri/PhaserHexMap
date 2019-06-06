@@ -15,6 +15,7 @@ var height_quest;
 var questList;
 var questDesc;
 var factionList;
+var locationList;
 
 
 var Play = function(game) {
@@ -24,24 +25,31 @@ Play.prototype = {
 	preload: function() {
 		game.load.image("button", "img/button_new-quest.png");
 		game.load.image("npcAddButton", "img/button_new-npc.png");
+		game.load.image("locationAddButton", "img/button_new-location.png");
 	},
 	create: function() {
 		// Define tile text
 		height_npc = 130;
 		height_quest = 130;
+		height_location = 130;
+		width_npc = 700;
+		width_location = 1000;
 		questText = game.add.text(40, 100, "Quests:");
-		npcText = game.add.text(800, 100, "NPCs:");
+		npcText = game.add.text(width_npc, 100, "NPCs:");
+		locationText = game.add.text(width_location, 100, "Locations:");
 
 		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 		questList = [];
 		npcArray = [];
 		deadNPCArray = [];
 		factionList = [];
+		locationList = [];
 
 		game.stage.backgroundColor = "#ffffff"
 
 		button = game.add.button(40, 50, 'button', actionOnAddQuest, this);
-		npcAddButton = game.add.button(800, 50, 'npcAddButton', actionOnAddNPC, this);
+		npcAddButton = game.add.button(width_npc, 50, 'npcAddButton', actionOnAddNPC, this);
+		locationAddButton = game.add.button(width_location, 50, 'locationAddButton', actionOnAddLocation, this);
 	}
 };
 
@@ -52,7 +60,9 @@ function actionOnAddQuest() {
 	questList.push(quest);
 
 	// Deals with adding faction quests
-	if (quest.type == "Faction") {
+	if (quest.type == "Exploration") {
+		let location = new Location(this.game);
+	} else if (quest.type == "Faction") {
 		let faction1 = new Faction(this.game);
 		faction1 = new Faction(this.game);
 		let faction2 = new Faction(this.game);
@@ -60,7 +70,7 @@ function actionOnAddQuest() {
 		while (faction1.name == faction2.name) {
 			faction2 = new Faction(this.game);
 		}
-		quest.text = faction1.name + " wants to attack " + faction2.name;
+		quest.text = faction1.name + " wants to attack the " + faction2.name;
 		console.log(quest.text);
 	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
 		let npc = findDeadNPC();
@@ -90,6 +100,12 @@ function killNPC(nameText) {
 		npc.isAlive = true;
 		removeDeadNPC(nameText);
 	}
+}
+
+function actionOnAddLocation() {
+	let location = new Location(this.game);
+	locationList.push(location);
+	addLocationText(location);
 }
 
 // Finds an NPC value based on a name
@@ -128,7 +144,7 @@ function findDeadNPC() {
 
 // Adds the NPC to the list of NPC names
 function addNPCName(npc) {
-	npcName = game.add.text(800, height_npc, npc.name + " the " + npc.occupation);
+	npcName = game.add.text(width_npc, height_npc, npc.name + " the " + npc.occupation);
 
 	npcName.font = "arial";
 	npcName.fontSize = 24;
@@ -168,6 +184,26 @@ function addQuestText(quest) {
 		questDesc.fill = "#39B53D";
 	}
 	height_quest = height_quest + 30;
+}
+
+
+// Adds the quest text to the list of quest texts
+function addLocationText(location) {
+	locationDesc =  game.add.text(width_location, height_location, location.name);
+
+	//set font
+	locationDesc.font = "arial";
+	locationDesc.fontSize = 24;
+	locationDesc.style.wordWrap = true;
+	locationDesc.style.wordWrapWidth = 750;
+
+	//locationDesc.inputEnabled = true;
+	//locationDesc.events.onInputUp.add(completeQuest, this);
+
+	// if (quest.isComplete){
+	// 	questDesc.fill = "#39B53D";
+	// }
+	height_location = height_location + 30;
 }
 
 // What happens when you click / complete a quest
