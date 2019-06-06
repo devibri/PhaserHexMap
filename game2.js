@@ -13,6 +13,8 @@ var questList;
 var questDesc;
 var factionList;
 var locationList;
+var npc;
+var isAliveText;
 
 
 var Play = function(game) {
@@ -36,6 +38,7 @@ Play.prototype = {
 		questText = game.add.text(40, 220, "Quests:");
 		npcText = game.add.text(width_npc, 100, "NPCs:");
 		locationText = game.add.text(width_location, 100, "Locations:");
+		isAliveText = game.add.text(0, 0, " ");
 
 		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 		questList = [];
@@ -161,9 +164,15 @@ function addNPCName(npc) {
 }
 
 function displayNPCInfo(nameText) {
-	let npc = findNPC(nameText);
+	detailText.text = " ";
+	isAliveText.destroy();
+	npc = findNPC(nameText);
 	detailText.text = "Name: " + npc.name + "\nOccupation: " + npc.occupation + "\nIs Alive: "// + npc.isAlive;
-	let isAliveText = game.add.text(150, 110, npc.isAlive);
+	if (npc.isAlive) {
+		isAliveText = game.add.text(150, 110, "true");
+	} else {
+		isAliveText = game.add.text(150, 110, "false");
+	}
 	isAliveText.inputEnabled = true;
 	isAliveText.events.onInputUp.add(setNPCLife, this);
 }
@@ -171,8 +180,10 @@ function displayNPCInfo(nameText) {
 function setNPCLife(isAliveText) {
 	if (isAliveText.text == "false") {
 		isAliveText.text = "true";
-	} else {
+		npc.isAlive = true;
+	} else  { //if (isAliveText.text == "true")
 		isAliveText.text = "false";
+		npc.isAlive = false;
 	}
 }
 
