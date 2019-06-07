@@ -63,9 +63,13 @@ function actionOnAddQuest() {
 	let quest = new Quest(this.game);
 	questList.push(quest);
 
-	// Deals with adding faction quests
+	// Deals with adding quests of given types
 	if (quest.type == "Exploration") {
 		let location = new Location(this.game);
+		location = new Location(this.game);
+		locationList.push(location);
+		addLocationText(location);
+		quest.text = "Someone wants you to go and explore " + location.name;
 	} else if (quest.type == "Faction") {
 		let faction1 = new Faction(this.game);
 		faction1 = new Faction(this.game);
@@ -75,7 +79,6 @@ function actionOnAddQuest() {
 			faction2 = new Faction(this.game);
 		}
 		quest.text = faction1.name + " wants to attack the " + faction2.name;
-		console.log(quest.text);
 	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
 		let npc = findDeadNPC();
 		quest.text = "Someone wants revenge for the death of " + npc.name;
@@ -92,6 +95,7 @@ function actionOnAddNPC() {
 	addNPCName(npc);
 }
 
+// When you add a new location via the button
 function actionOnAddLocation() {
 	let location = new Location(this.game);
 	location = new Location(this.game);
@@ -165,6 +169,7 @@ function displayNPCInfo(nameText) {
 	isAliveText.events.onInputUp.add(setNPCLife, this);
 }
 
+// Changes npc from alive/dead and vice versa
 function setNPCLife(isAliveText) {
 	if (isAliveText.text == "false") {
 		isAliveText.text = "true";
@@ -179,6 +184,7 @@ function setNPCLife(isAliveText) {
 	}
 }
 
+// Changes the NPC's name color when alive or dead
 function colorNPCName(npc) {
 	let npcText = "";
 	for (var i = 0; i < npcTextList.length; i++) {
