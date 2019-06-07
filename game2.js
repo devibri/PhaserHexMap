@@ -15,6 +15,7 @@ var factionList;
 var locationList;
 var npc;
 var isAliveText;
+var npcTextList;
 
 
 var Play = function(game) {
@@ -46,6 +47,7 @@ Play.prototype = {
 		deadNPCArray = [];
 		factionList = [];
 		locationList = [];
+		npcTextList = [];
 
 		game.stage.backgroundColor = "#ffffff"
 
@@ -148,6 +150,7 @@ function findDeadNPC() {
 // Adds the NPC to the list of NPC names
 function addNPCName(npc) {
 	npcName = game.add.text(width_npc, height_npc, npc.name + " the " + npc.occupation);
+	npcTextList.push(npcName);
 
 	npcName.font = "arial";
 	npcName.fontSize = 24;
@@ -181,9 +184,25 @@ function setNPCLife(isAliveText) {
 	if (isAliveText.text == "false") {
 		isAliveText.text = "true";
 		npc.isAlive = true;
+		colorNPCName(npc);
 	} else  { //if (isAliveText.text == "true")
 		isAliveText.text = "false";
 		npc.isAlive = false;
+		colorNPCName(npc);
+	}
+}
+
+function colorNPCName(npc) {
+	let npcText = "";
+	for (var i = 0; i < npcTextList.length; i++) {
+		if (npcTextList[i].text == npc.name + " the " + npc.occupation) {
+			npcText = npcTextList[i];
+		}
+	}
+	if (npc.isAlive) {
+		npcText.fill = "#000000";
+	} else  { // if npc is dead
+		npcText.fill = "#ff0044";
 	}
 }
 
@@ -248,3 +267,8 @@ function findQuest(questDesc) {
 // define and start states
 game.state.add('Play', Play);
 game.state.start('Play');
+
+
+//create an array of text elements
+//search through array for text.text that has same name as given npc
+//change name color/fill depending on if NPC is set to alive or dead
