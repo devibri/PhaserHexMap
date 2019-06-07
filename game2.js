@@ -92,20 +92,6 @@ function actionOnAddNPC() {
 	addNPCName(npc);
 }
 
-// Kills an NPC on click
-function killNPC(nameText) {
-	let npc = findNPC(nameText);
-	if (npc.isAlive) {
-		nameText.fill = "#ff0044";
-		npc.isAlive = false;
-		deadNPCArray.push(npc);
-	} else {
-		nameText.fill = "#000000";
-		npc.isAlive = true;
-		removeDeadNPC(nameText);
-	}
-}
-
 function actionOnAddLocation() {
 	let location = new Location(this.game);
 	location = new Location(this.game);
@@ -123,9 +109,9 @@ function findNPC(name) {
 }
 
 // Removes an NPC's name from the dead NPC list when setting them back to alive
-function removeDeadNPC(name) {
+function removeDeadNPC(npc) {
 	for (var i = 0; i < deadNPCArray.length; i++) {
-		if (name.text == deadNPCArray[i].name + " the " + deadNPCArray[i].occupation) {
+		if (npc.name == deadNPCArray[i].name) {
 			deadNPCArray.splice(i, 1);
 		}
 	}
@@ -158,7 +144,6 @@ function addNPCName(npc) {
 	npcName.style.wordWrapWidth = 400;
 
 	npcName.inputEnabled = true;
-	//npcName.events.onInputUp.add(killNPC, this);
 	npcName.events.onInputUp.add(displayNPCInfo, this);
 	if (!npc.isAlive){
 		npcName.fill = "#ff0044";
@@ -185,9 +170,11 @@ function setNPCLife(isAliveText) {
 		isAliveText.text = "true";
 		npc.isAlive = true;
 		colorNPCName(npc);
-	} else  { //if (isAliveText.text == "true")
+	} else  { // if killing NPC
 		isAliveText.text = "false";
 		npc.isAlive = false;
+		removeDeadNPC(npc);
+		deadNPCArray.push(npc);
 		colorNPCName(npc);
 	}
 }
@@ -233,7 +220,6 @@ function addQuestText(quest) {
 	height_quest = height_quest + 30;
 }
 
-
 // Adds the quest text to the list of quest texts
 function addLocationText(location) {
 	locationDesc =  game.add.text(width_location, height_location, location.name);
@@ -263,12 +249,6 @@ function findQuest(questDesc) {
 	}
 }
 
-
 // define and start states
 game.state.add('Play', Play);
 game.state.start('Play');
-
-
-//create an array of text elements
-//search through array for text.text that has same name as given npc
-//change name color/fill depending on if NPC is set to alive or dead

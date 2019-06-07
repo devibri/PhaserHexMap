@@ -3,7 +3,7 @@
 function Quest(game) {
   this.npcs = []; //array of all NPCs associated with this quest
   questTypeList = ["Faction", "Exploration", "Revenge"];
-  this.questGiver = null; // The NPC giving the quest
+  this.questGiver = "Someone"; // The NPC giving the quest
   this.isComplete = false;
 
   this.type = questTypeList[Math.floor(Math.random()*questTypeList.length)];
