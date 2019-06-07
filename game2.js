@@ -169,11 +169,11 @@ function setNPCLife(isAliveText) {
 	if (isAliveText.text == "false") {
 		isAliveText.text = "true";
 		npc.isAlive = true;
+		removeDeadNPC(npc);
 		colorNPCName(npc);
 	} else  { // if killing NPC
 		isAliveText.text = "false";
 		npc.isAlive = false;
-		removeDeadNPC(npc);
 		deadNPCArray.push(npc);
 		colorNPCName(npc);
 	}
