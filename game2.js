@@ -15,7 +15,10 @@ var factionList;
 var locationList;
 var npc;
 var isAliveText;
+var isCompleteText;
 var npcTextList;
+var questTextList;
+var quest;
 
 
 var Play = function(game) {
@@ -30,16 +33,19 @@ Play.prototype = {
 	},
 	create: function() {
 		// Define tile text
-		height_npc = 130;
+		button_height = 160;
+		height_npc = button_height + 100;
 		height_quest = 250;
-		height_location = 130;
+		height_location = button_height + 100;
 		width_npc = 675;
 		width_location = 975;
-		detailText = game.add.text(40, 40, "[Details]");
+		detailText = game.add.text(width_npc, 40, " ");
+		questDetailText = game.add.text(40, 40, "[details]");
 		questText = game.add.text(40, 220, "Quests:");
-		npcText = game.add.text(width_npc, 100, "NPCs:");
-		locationText = game.add.text(width_location, 100, "Locations:");
+		npcText = game.add.text(width_npc, button_height + 60, "NPCs:");
+		locationText = game.add.text(width_location, button_height + 60, "Locations:");
 		isAliveText = game.add.text(0, 0, " ");
+		isCompleteText = game.add.text(0, 0, " ");
 
 		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
 		questList = [];
@@ -48,12 +54,13 @@ Play.prototype = {
 		factionList = [];
 		locationList = [];
 		npcTextList = [];
+		questTextList = [];
 
 		game.stage.backgroundColor = "#ffffff"
 
-		button = game.add.button(40, 150, 'button', actionOnAddQuest, this);
-		npcAddButton = game.add.button(width_npc, 50, 'npcAddButton', actionOnAddNPC, this);
-		locationAddButton = game.add.button(width_location, 50, 'locationAddButton', actionOnAddLocation, this);
+		button = game.add.button(40, button_height, 'button', actionOnAddQuest, this);
+		npcAddButton = game.add.button(width_npc, button_height, 'npcAddButton', actionOnAddNPC, this);
+		locationAddButton = game.add.button(width_location, button_height, 'locationAddButton', actionOnAddLocation, this);
 	}
 };
 
@@ -70,18 +77,23 @@ function actionOnAddQuest() {
 		locationList.push(location);
 		addLocationText(location);
 		quest.text = "Someone wants you to go and explore " + location.name;
+
 	} else if (quest.type == "Faction") {
 		let faction1 = new Faction(this.game);
 		faction1 = new Faction(this.game);
 		let faction2 = new Faction(this.game);
 
+		// make sure faction is not warring with itself
 		while (faction1.name == faction2.name) {
 			faction2 = new Faction(this.game);
 		}
-		quest.text = faction1.name + " wants to attack the " + faction2.name;
+
+		quest.text = "The " + faction1.name + " wants to attack the " + faction2.name;
+
 	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
 		let npc = findDeadNPC();
 		quest.text = "Someone wants revenge for the death of " + npc.name;
+
 	} else {
 			quest.text = quest.text;
 	}
@@ -161,9 +173,9 @@ function displayNPCInfo(nameText) {
 	npc = findNPC(nameText);
 	detailText.text = "Name: " + npc.name + "\nOccupation: " + npc.occupation + "\nIs Alive: "// + npc.isAlive;
 	if (npc.isAlive) {
-		isAliveText = game.add.text(150, 110, "true");
+		isAliveText = game.add.text(width_npc + 115, 110, "true");
 	} else {
-		isAliveText = game.add.text(150, 110, "false");
+		isAliveText = game.add.text(width_npc + 115, 110, "false");
 	}
 	isAliveText.inputEnabled = true;
 	isAliveText.events.onInputUp.add(setNPCLife, this);
@@ -210,6 +222,7 @@ function getNPCName() {
 // Adds the quest text to the list of quest texts
 function addQuestText(quest) {
 	questDesc =  game.add.text(40, height_quest, quest.text);
+	questTextList.push(questDesc);
 
 	//set font
 	questDesc.font = "arial";
@@ -218,7 +231,7 @@ function addQuestText(quest) {
 	questDesc.style.wordWrapWidth = 750;
 
 	questDesc.inputEnabled = true;
-	questDesc.events.onInputUp.add(completeQuest, this);
+	questDesc.events.onInputUp.add(clickQuest, this);
 
 	if (quest.isComplete){
 		questDesc.fill = "#39B53D";
@@ -239,14 +252,50 @@ function addLocationText(location) {
 	height_location = height_location + 30;
 }
 
-// What happens when you click / complete a quest
-function completeQuest(questDesc) {
-	let quest = findQuest(questDesc);
-	quest.isComplete = true;
-	questDesc.fill = "#39B53D";
+//displays the details of the quest being clicked
+function clickQuest(questDesc) {
+	questDetailText.text = " ";
+	isCompleteText.destroy();
+	quest = findQuest(questDesc);
+	questDetailText.text = "Type: " + quest.type + "\nQuest Giver: " + quest.questGiver + "\nIs Complete: "
+	if (quest.isComplete) {
+		isCompleteText = game.add.text(210, 110, "true");
+	} else {
+		isCompleteText = game.add.text(210, 110, "false");
+	}
+	isCompleteText.inputEnabled = true;
+	isCompleteText.events.onInputUp.add(completeQuest, this);
 }
 
-// Finds an NPC value based on a name
+// What happens when you click / complete a quest
+function completeQuest(isCompleteText) {
+	if (isCompleteText.text == "false") {
+		isCompleteText.text = "true";
+		quest.isComplete = true;
+		colorQuestName(quest);
+	} else  { // if killing NPC
+		isCompleteText.text = "false";
+		quest.isComplete = false;
+		colorQuestName(quest);
+	}
+}
+
+function colorQuestName(quest) {
+	let questText = "";
+	for (var i = 0; i < questTextList.length; i++) {
+		if (questTextList[i].text == quest.text) {
+			questText = questTextList[i];
+		}
+	}
+	console.log(questText);
+	if (quest.isComplete) {
+		questText.fill = "#32CD32";
+	} else  {
+		questText.fill = "#ffffff";
+	}
+}
+
+// Finds a quest based on its description
 function findQuest(questDesc) {
 	for (var i = 0; i < questList.length; i++) {
 		if (questDesc.text == questList[i].text) {
