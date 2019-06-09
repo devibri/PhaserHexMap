@@ -76,23 +76,24 @@ function actionOnAddQuest() {
 		location = new Location(this.game);
 		locationList.push(location);
 		addLocationText(location);
-		quest.text = "Someone wants you to go and explore " + location.name;
-
+		let questgiver = findAliveNPC();
+		quest.questGiver = questgiver;
+		quest.text = questgiver.name + " wants you to go and explore " + location.name;
 	} else if (quest.type == "Faction") {
 		let faction1 = new Faction(this.game);
 		faction1 = new Faction(this.game);
 		let faction2 = new Faction(this.game);
-
-		// make sure faction is not warring with itself
-		while (faction1.name == faction2.name) {
+		quest.questGiver = faction1;
+		while (faction1.name == faction2.name) { // make sure faction is not warring with itself
 			faction2 = new Faction(this.game);
 		}
-
 		quest.text = "The " + faction1.name + " wants to attack the " + faction2.name;
 
 	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
 		let npc = findDeadNPC();
-		quest.text = "Someone wants revenge for the death of " + npc.name;
+		let questgiver = findAliveNPC();
+		quest.questGiver = questgiver;
+		quest.text = questgiver.name + " wants revenge for the death of " + npc.name;
 
 	} else {
 			quest.text = quest.text;
@@ -130,6 +131,27 @@ function removeDeadNPC(npc) {
 		if (npc.name == deadNPCArray[i].name) {
 			deadNPCArray.splice(i, 1);
 		}
+	}
+}
+
+// chance of getting an NPC in game or a new one
+function findAliveNPC() {
+	if (npcArray.length > 0) {
+		let index = Math.floor(Math.random()*npcArray.length)
+		let npc = npcArray[index];
+		if (npc.isAlive) {
+			return npc;
+		} else {
+			let npc = new Npc(this.game, getNPCName());
+			npcArray.push(npc);
+			addNPCName(npc);
+			return npc;
+		}
+	} else { // Make a new NPC to add to the world who is dead
+		let npc = new Npc(this.game, getNPCName());
+		npcArray.push(npc);
+		addNPCName(npc);
+		return npc;
 	}
 }
 
@@ -257,7 +279,7 @@ function clickQuest(questDesc) {
 	questDetailText.text = " ";
 	isCompleteText.destroy();
 	quest = findQuest(questDesc);
-	questDetailText.text = "Type: " + quest.type + "\nQuest Giver: " + quest.questGiver + "\nIs Complete: "
+	questDetailText.text = "Type: " + quest.type + "\nQuest Giver: " + quest.questGiver.name + "\nIs Complete: "
 	if (quest.isComplete) {
 		isCompleteText = game.add.text(210, 110, "true");
 	} else {
@@ -287,7 +309,6 @@ function colorQuestName(quest) {
 			questText = questTextList[i];
 		}
 	}
-	console.log(questText);
 	if (quest.isComplete) {
 		questText.fill = "#32CD32";
 	} else  {
