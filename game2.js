@@ -356,7 +356,7 @@ function colorQuestName(quest) {
 	if (quest.isComplete) {
 		questText.fill = "#32CD32";
 	} else  {
-		questText.fill = "#ffffff";
+		questText.fill = "#000000";
 	}
 }
 
