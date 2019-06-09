@@ -51,6 +51,7 @@ Play.prototype = {
 		npcArray = [];
 		deadNPCArray = [];
 		factionList = [];
+		currentLocationList = [];
 		npcTextList = [];
 		questTextList = [];
 
