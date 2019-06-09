@@ -66,6 +66,20 @@ function setEncounterDetails(type) {
   } else if (type == "Crossing")  { //TODO: Make terrain-specific
     crossingList = ["The road ahead is blockaded by fallen trees", "A chasm crosses the land, with only a shaky bridge between one side and the other"];
     return crossingList[Math.floor(Math.random()*crossingList.length)]
+  } else if (type == "Ancient Structure") {
+
+  } else if (type == "Natural Phenomenon") {
+
+  } else if (type == "Treasure") {
+
+  } else if (type == "Contested Area") {
+
+  } else if (type == "Natural Resource") {
+
+  } else if (type == "Supernatural Feature") {
+
+  } else if (type == "Gathering Place") {
+
   } else { //some generic type of encounter -- should not happen as-is
     return "There are no encounters";
   }

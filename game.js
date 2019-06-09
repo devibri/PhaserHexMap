@@ -296,7 +296,7 @@ function actionOnGenerate() {
 	}
 
 	// update the text on the screen
-	hex.tileText = "Terrain: " + hex.terrain + "\nEncounters: " + hex.encounters.encounterType + "\nEncounter details: " + hex.encounters.encounterDetails + "\nNPCs: " + hex.npcs.name + " the " + hex.npcs.occupation;
+	hex.tileText = "Terrain: " + hex.terrain + "\nEncounters: " + hex.encounters.encounterType + "\nEncounter details: " + hex.encounters.encounterDetails;
 	tileText.text = hex.tileText;
 }
 
