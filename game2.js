@@ -305,7 +305,12 @@ function clickQuest(questDesc) {
 
 function clearSelectedQuest() {
 	for (var i = 0; i < questTextList.length; i++) {
-		questTextList[i].fill = "#000000";
+		let quest = findQuest(questTextList[i]);
+		if (!quest.isComplete) {
+			questTextList[i].fill = "#000000";
+		} else {
+			questTextList[i].fill = "#32CD32";
+		}
 	}
 }
 
