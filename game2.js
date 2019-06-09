@@ -77,7 +77,8 @@ function actionOnAddQuest() {
 		addLocationText(location);
 		let questgiver = findAliveNPC();
 		quest.questGiver = questgiver;
-		quest.text = questgiver.name + " wants you to go and explore " + location.name;
+		explorationQuestList = [questgiver.name + " wants you to go and explore " + location.name];
+		quest.text = explorationQuestList[Math.floor(Math.random()*explorationQuestList.length)];
 	} else if (quest.type == "Faction") {
 		let faction1 = new Faction(this.game);
 		faction1 = new Faction(this.game);
@@ -86,18 +87,30 @@ function actionOnAddQuest() {
 		while (faction1.name == faction2.name) { // make sure faction is not warring with itself
 			faction2 = new Faction(this.game);
 		}
-		quest.text = "The " + faction1.name + " wants to attack the " + faction2.name;
-
+		factionQuestList = ["The " + faction1.name + " wants to attack the " + faction2.name];
+    quest.text = factionQuestList[Math.floor(Math.random()*factionQuestList.length)];
 	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
 		let npc = findDeadNPC();
 		let questgiver = findAliveNPC();
 		quest.questGiver = questgiver;
-		quest.text = questgiver.name + " wants revenge for the death of " + npc.name;
-
+		revengeQuestList = [questgiver.name + " wants revenge for the death of " + npc.name];
+		quest.text = revengeQuestList[Math.floor(Math.random()*revengeQuestList.length)];
 	} else {
 			quest.text = quest.text;
 	}
 	addQuestText(quest);
+}
+
+function setQuestText(type, var1, var2) {
+  if (type == "Faction") {
+
+  } else if (type == "Exploration") {
+
+  } else if (type == "Revenge") {
+
+  } else { //some generic type of quest -- should not happen
+    return "There are no new quests available.";
+  }
 }
 
 // Adds a new NPC to the list of NPCs
