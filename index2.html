@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Computational DM Assistant</title>
+	<style type="text/css">
+	body{
+		padding:0px;
+		margin:0px;
+	}
+	</style>
+	<!-- load external dependencies -->
+	<script src="phaser.min.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script id="scriptfile" type="text/javascript"></script>
+	<script src = "prefabs/Hexagon.js"></script>
+	<script src = "prefabs/Npc.js"></script>
+	<script src = "prefabs/Encounter.js"></script>
+	<script src = "prefabs/Quest.js"></script>
+	<script src = "prefabs/Faction.js"></script>
+	<script src = "prefabs/Location.js"></script>
+</head>
+<body class="w3-container">
+	<header class="w3-container w3-teal">
+		<h3>Computational DM Assistant</h3>
+	</header>
+	<script type="text/javascript">
+		// dynamically reload JS file (requires refresh before selection)
+		function loadJS(file) {
+			// clear Phaser's target <div> so we don't get multiple game instances
+			document.getElementById("phaser").innerHTML = "";
+			// replace script file source
+			document.getElementById('scriptfile').src = file;
+		}
+	</script>
+	<!-- Buttons to load each JS file -->
+	<div class="w3-bar w3-border">
+		<!-- Reload browser w/ true parameter to ignore cache -->
+		<a href="#" class="w3-bar-item w3-button w3-deep-orange" onclick="location.reload(true)"><i class="fa fa-refresh"></i></a>
+		<a href="#" class="w3-bar-item w3-button" onclick="loadJS('game.js');">World Map</a>
+		<a href="#" class="w3-bar-item w3-button" onclick="loadJS('game2.js');">Quest Tracker</a>
+	</div>
+	<!-- Target div for Phaser-created <canvas> -->
+	<div id="phaser">
+		<div class="w3-panel w3-pale-red w3-leftbar w3-border-red">
+  			<p> Select JS file from menu above to load that tool. Be sure to click reload between each selection. </p>
+		</div>
+	</div>
+</body>
+</html>

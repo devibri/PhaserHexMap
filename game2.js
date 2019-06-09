@@ -29,7 +29,6 @@ Play.prototype = {
 		game.load.image("button", "img/button_new-quest.png");
 		game.load.image("npcAddButton", "img/button_new-npc.png");
 		game.load.image("locationAddButton", "img/button_new-location.png");
-		game.load.image("killButton", "img/button_kill.png");
 	},
 	create: function() {
 		// Define tile text
@@ -190,6 +189,8 @@ function addNPCName(npc) {
 }
 
 function displayNPCInfo(nameText) {
+	clearSelectedNPC();
+	nameText.fill = "#f4be41";
 	detailText.text = " ";
 	isAliveText.destroy();
 	npc = findNPC(nameText);
@@ -201,6 +202,17 @@ function displayNPCInfo(nameText) {
 	}
 	isAliveText.inputEnabled = true;
 	isAliveText.events.onInputUp.add(setNPCLife, this);
+}
+
+function clearSelectedNPC() {
+	for (var i = 0; i < npcTextList.length; i++) {
+		let npc = findNPC(npcTextList[i]);
+		if (npc.isAlive) {
+			npcTextList[i].fill = "#000000";
+		} else {
+			npcTextList[i].fill = "#ff0044";
+		}
+	}
 }
 
 // Changes npc from alive/dead and vice versa
@@ -248,7 +260,7 @@ function addQuestText(quest) {
 
 	//set font
 	questDesc.font = "arial";
-	questDesc.fontSize = 24;
+	questDesc.fontSize = 20;
 	questDesc.style.wordWrap = true;
 	questDesc.style.wordWrapWidth = 750;
 
@@ -276,6 +288,8 @@ function addLocationText(location) {
 
 //displays the details of the quest being clicked
 function clickQuest(questDesc) {
+	clearSelectedQuest();
+	questDesc.fill = "#f4be41";
 	questDetailText.text = " ";
 	isCompleteText.destroy();
 	quest = findQuest(questDesc);
@@ -287,6 +301,12 @@ function clickQuest(questDesc) {
 	}
 	isCompleteText.inputEnabled = true;
 	isCompleteText.events.onInputUp.add(completeQuest, this);
+}
+
+function clearSelectedQuest() {
+	for (var i = 0; i < questTextList.length; i++) {
+		questTextList[i].fill = "#000000";
+	}
 }
 
 // What happens when you click / complete a quest

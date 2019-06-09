@@ -52,7 +52,6 @@ Play.prototype = {
 
 		// Define types of tiles
 		terrainArray = ["Swamp", "Desert", "Fields", "Forest", "Hills", "Mountains", "Town"];
-		townNameList = ["Spindletree", "Bricksaw", "Lookout Way", "Kirith", "Asander", "Geodyne", "Valley Ridge", "Banden"];
 
 		hexagonGroup = game.add.group();
 		game.stage.backgroundColor = "#ffffff"
@@ -263,7 +262,6 @@ function colorHex(posX,posY){
 		hex = selectedHex;
 		if (selectedHex.isGenerated) {
 			tileText.text = hex.tileText;
-			button = game.add.button(300, 100, 'button', actionOnGenerate, this);
 		} else {
 			tileText.text = "[Not yet generated]";
 			button = game.add.button(300, 100, 'button', actionOnGenerate, this);
@@ -276,7 +274,7 @@ function actionOnGenerate() {
 
 	// generate and set the field values
 	hex.terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
-	hex.encounters = new Encounter(this.game, hex, name);
+	hex.encounters = new Encounter(this.game, hex);
 	hex.npcs = new Npc(this.game);
 
 	// change the hex color to generated color
