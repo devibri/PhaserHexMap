@@ -6,7 +6,7 @@ function Npc(game, name) {
 	/* *** MAKE YOUR OWN CAMPAIGN ***
 	* Use this section to modify the values below to customize your own campaign
 	*/
-	occupationList = ["Chef","Blacksmith","Colonist","Adventurer","Sellsword","Trader","Fisherperson","Politician","Guard","Bartender","Innkeeper","Bodyguard","Spy","Soldier","Baker"]
+	occupationList = ["Chef","Blacksmith","Colonist","Adventurer","Sellsword","Trader","Fisherperson","Politician","Guard","Bartender","Innkeeper","Bodyguard","Spy","Soldier","Baker","Courier","Sailor","Hunter", "Farmer","Whaler","Butcher"]
 
 	//NPC stats
 	this.name = name;

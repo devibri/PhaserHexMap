@@ -46,7 +46,7 @@ Play.prototype = {
 		isAliveText = game.add.text(0, 0, " ");
 		isCompleteText = game.add.text(0, 0, " ");
 
-		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira"];
+		nameList = ["Rex", "Corith", "Anton", "Rizzo", "Talie", "Kara", "Symon", "Zirra", "Orin", "Parrish", "Isira", "Winston", "Herra", "Kirin", "Arin", "Annea", "Mari", "Innesh", "Zachariah", "Constance", "Pierre"];
 		questList = [];
 		npcArray = [];
 		deadNPCArray = [];
@@ -80,7 +80,7 @@ function actionOnAddQuest() {
 		}
 		let questgiver = findAliveNPC();
 		quest.questGiver = questgiver;
-		explorationQuestList = [questgiver.name + " wants you to go and explore " + location.name];
+		explorationQuestList = [questgiver.name + " wants you to go and explore " + location.name, questgiver.name + " has heard there is something valuable in " + location.name, questgiver.name + " lost a family heirloom in " + location.name, questgiver.name + " has heard strange noises coming from " + location.name];
 		quest.text = explorationQuestList[Math.floor(Math.random()*explorationQuestList.length)];
 	} else if (quest.type == "Faction") {
 		let faction1 = new Faction(this.game);
@@ -90,7 +90,7 @@ function actionOnAddQuest() {
 		while (faction1.name == faction2.name) { // make sure faction is not warring with itself
 			faction2 = new Faction(this.game);
 		}
-		factionQuestList = ["The " + faction1.name + " wants to attack the " + faction2.name];
+		factionQuestList = ["The " + faction1.name + " wants to attack the " + faction2.name, "The " + faction1.name + " wants information about the " + faction2.name, "The " + faction1.name + " wants you to infiltrate the " + faction2.name, "The " + faction1.name + " wants information about the " + faction2.name, "The " + faction1.name + " believes you are informants for the " + faction2.name];
     quest.text = factionQuestList[Math.floor(Math.random()*factionQuestList.length)];
 	}	else if (quest.type == "Revenge") {	// Deals with adding revenge quests
 		let npc = findDeadNPC();
@@ -123,9 +123,13 @@ function actionOnAddNPC() {
 }
 
 // When you add a new location via the button
-function actionOnAddLocation() {
+function actionOnAddLocation() { // TODO: Fix this for when all locations listed
+	let isListed = true;
 	let location = new Location(this.game);
-	location = new Location(this.game);
+	while (isListed) {
+		location = new Location(this.game);
+		isListed = checkLocationRepeat(location);
+	}
 	currentLocationList.push(location);
 	addLocationText(location);
 }
