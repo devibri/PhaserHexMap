@@ -12,7 +12,7 @@ var height_quest;
 var questList;
 var questDesc;
 var factionList;
-var locationList;
+var currentLocationList;
 var npc;
 var isAliveText;
 var isCompleteText;
@@ -51,7 +51,6 @@ Play.prototype = {
 		npcArray = [];
 		deadNPCArray = [];
 		factionList = [];
-		locationList = [];
 		npcTextList = [];
 		questTextList = [];
 
@@ -73,8 +72,11 @@ function actionOnAddQuest() {
 	if (quest.type == "Exploration") {
 		let location = new Location(this.game);
 		location = new Location(this.game);
-		locationList.push(location);
-		addLocationText(location);
+		let isListed = checkLocationRepeat(location);
+		if (isListed == false) {
+			currentLocationList.push(location);
+			addLocationText(location);
+		}
 		let questgiver = findAliveNPC();
 		quest.questGiver = questgiver;
 		explorationQuestList = [questgiver.name + " wants you to go and explore " + location.name];
@@ -93,7 +95,7 @@ function actionOnAddQuest() {
 		let npc = findDeadNPC();
 		let questgiver = findAliveNPC();
 		quest.questGiver = questgiver;
-		revengeQuestList = [questgiver.name + " wants revenge for the death of " + npc.name];
+		revengeQuestList = [questgiver.name + " wants revenge for the death of " + npc.name, questgiver.name + " is concerned because " + npc.name + " is missing", npc.name + " has been killed and " + questgiver.name + " wants your help finding out why", questgiver.name + " says they have been framed for the death of " + npc.name];
 		quest.text = revengeQuestList[Math.floor(Math.random()*revengeQuestList.length)];
 	} else {
 			quest.text = quest.text;
@@ -101,16 +103,15 @@ function actionOnAddQuest() {
 	addQuestText(quest);
 }
 
-function setQuestText(type, var1, var2) {
-  if (type == "Faction") {
-
-  } else if (type == "Exploration") {
-
-  } else if (type == "Revenge") {
-
-  } else { //some generic type of quest -- should not happen
-    return "There are no new quests available.";
-  }
+function checkLocationRepeat(location) {
+	if (currentLocationList.length > 0) {
+		for (var i = 0; i < currentLocationList.length; i++) {
+			if (currentLocationList[i].name == location.name) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 // Adds a new NPC to the list of NPCs
@@ -124,7 +125,7 @@ function actionOnAddNPC() {
 function actionOnAddLocation() {
 	let location = new Location(this.game);
 	location = new Location(this.game);
-	locationList.push(location);
+	currentLocationList.push(location);
 	addLocationText(location);
 }
 
