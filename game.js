@@ -38,6 +38,7 @@ Play.prototype = {
 		game.load.image("hexagon_town", "img/hexagon-town.png");
 		game.load.image("marker", "img/marker.png");
 		game.load.image("button", "img/button_generate.png");
+		game.load.image("button-all", "img/button_generate-all.png");
 	},
 	create: function() {
 		// Define tile text
@@ -45,10 +46,13 @@ Play.prototype = {
 		tileText.font = "arial";
 		tileText.fontSize = 24;
 		tileText.style.wordWrap = true;
-		tileText.style.wordWrapWidth = 250;
+		tileText.style.wordWrapWidth = 240;
+
+		buttonAll = game.add.button(500, 100, 'button-all', actionOnGenerateAll, this);
 
 		// Define types of tiles
 		terrainArray = ["Swamp", "Desert", "Fields", "Forest", "Hills", "Mountains", "Town"];
+		townNameList = ["Spindletree", "Bricksaw", "Lookout Way", "Kirith", "Asander", "Geodyne", "Valley Ridge", "Banden"];
 
 		hexagonGroup = game.add.group();
 		game.stage.backgroundColor = "#ffffff"
@@ -259,6 +263,7 @@ function colorHex(posX,posY){
 		hex = selectedHex;
 		if (selectedHex.isGenerated) {
 			tileText.text = hex.tileText;
+			button = game.add.button(300, 100, 'button', actionOnGenerate, this);
 		} else {
 			tileText.text = "[Not yet generated]";
 			button = game.add.button(300, 100, 'button', actionOnGenerate, this);
@@ -271,7 +276,7 @@ function actionOnGenerate() {
 
 	// generate and set the field values
 	hex.terrain = terrainArray[Math.floor(Math.random()*terrainArray.length)];
-	hex.encounters = new Encounter(this.game, hex);
+	hex.encounters = new Encounter(this.game, hex, name);
 	hex.npcs = new Npc(this.game);
 
 	// change the hex color to generated color
@@ -298,6 +303,17 @@ function actionOnGenerate() {
 	// update the text on the screen
 	hex.tileText = "Terrain: " + hex.terrain + "\nEncounters: " + hex.encounters.encounterType + "\nEncounter details: " + hex.encounters.encounterDetails;
 	tileText.text = hex.tileText;
+}
+
+function actionOnGenerateAll() {
+	for(var i = 0; i < gridSizeX/2; i ++){
+		for(var j = 0; j < gridSizeY; j ++){
+			//if(gridSizeX%2==0 || i+1<gridSizeX/2 || j%2==0){
+				hex = hexagonArray[i][j];
+				actionOnGenerate();
+			//}
+		}
+	}
 }
 
 // define and start states
