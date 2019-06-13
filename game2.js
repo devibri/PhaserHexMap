@@ -213,7 +213,7 @@ function displayNPCInfo(nameText) {
 	detailText.text = " ";
 	isAliveText.destroy();
 	npc = findNPC(nameText);
-	detailText.text = "Name: " + npc.name + "\nOccupation: " + npc.occupation + "\nIs Alive: "// + npc.isAlive;
+	detailText.text = "Name: " + npc.name + " (" + npc.valence + ")\nOccupation: " + npc.occupation + "\nIs Alive: "// + npc.isAlive;
 	if (npc.isAlive) {
 		isAliveText = game.add.text(width_npc + 115, 110, "true");
 	} else {
@@ -339,6 +339,7 @@ function completeQuest(isCompleteText) {
 		isCompleteText.text = "true";
 		quest.isComplete = true;
 		colorQuestName(quest);
+		quest.questGiver.valence = "Friendly"
 	} else  { // if killing NPC
 		isCompleteText.text = "false";
 		quest.isComplete = false;
