@@ -18,7 +18,7 @@ Click a hex in order to select it. You can press "Generate" to load in a random 
 Click "New Quest", "New NPC", or "New Location" to generate these items, which displays in a list below the button. Click a specific quest or NPC to see their details above the kind of button. You can click the "true/false" text on quest descriptions and NPCs (is Complete, and is Alive) in order to toggle quests as complete or incomplete and NPCs as dead or alive. Completed quests will be displayed in green, and dead NPCs will be displayed in red. The NPC and Locations lists will automatically update with new information when quests mention them. 
 
 ### Customize Text
-You can use the included Python files to turn newline lists into arrays for inputting into the generator. For instance, if you have a list of names, occupations, or locations you want referenced, you can 
+You can use the included Python files to turn newline lists into arrays for inputting into the generator. For instance, if you have a list of names, occupations, or locations you want referenced, you can parse through them using the included python files to generate an array, then input this array into the code to be referenced by the generator.
 
 ## Attribution
 This project was created in Phaser. Encounters and terrain are based off of Erin Smale's [Hex-Based Campaign Design](https://www.welshpiper.com/hex-based-campaign-design-part-2/) encounter table. Terrain icons are from [Opemmoji](https://openmoji.org/). Original hex map code based on [this tutorial](https://www.emanueleferonato.com/2015/02/12/how-to-find-adjacent-tiles-in-hexagonal-maps-all-and-every-case-explained/) on finding adjacent hexes in a hex map in Phaser. 
